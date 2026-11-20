@@ -6,6 +6,10 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Firebase web settings are public by design: Vite puts them in the site's
+  # JavaScript, and access is controlled by firestore.rules. Netlify flags
+  # them as secrets on import, so tell its secret scanner they're expected.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_APP_ID"
 
 # Long-cache the hashed asset files; always re-check index.html.
 [[headers]]

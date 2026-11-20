@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useRoute, navigate } from './lib/hooks.js';
+import { trackPage } from './lib/analytics.js';
+import { Feedback, openFeedback } from './components/Feedback.jsx';
 import { useStore } from './lib/store.js';
 import { resetToSelector, discardAttempt, chooseAudience } from './lib/actions.js';
 import { PATHS } from './data/paths.js';
@@ -54,6 +56,7 @@ function Routes() {
   const { parts, query } = useRoute();
   const page = parts[0] || '';
   useEffect(() => { if (page !== '') window.scrollTo(0, 0); }, [page, parts[1]]);
+  useEffect(() => { trackPage(parts); }, [page, parts[1]]);
   let el;
   switch (page) {
     case '': el = <Home />; break;
@@ -74,6 +77,7 @@ function Routes() {
       <Header route={page} />
       {el}
       <Footer quiet={page === 'test'} />
+      <Feedback hidden={page === 'test'} />
     </div>
   );
 }
@@ -127,10 +131,14 @@ function Footer({ quiet }) {
               <li><a href="https://ocw.mit.edu/" target="_blank" rel="noreferrer">MIT OpenCourseWare</a></li>
               <li><a href="https://www.freecodecamp.org/learn/" target="_blank" rel="noreferrer">freeCodeCamp</a></li>
             </ul>
+            <h2 className="footer-sub">Help us improve</h2>
+            <ul role="list">
+              <li><button type="button" onClick={openFeedback}>Send feedback</button></li>
+            </ul>
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Skilly · Built on the SkillBridge idea (AARAMBHATHON Round 1). Your progress stays in this browser; nothing is sent anywhere.</p>
+          <p>© {new Date().getFullYear()} Skilly · Built on the SkillBridge idea (AARAMBHATHON Round 1). Your answers and progress stay in this browser. We only receive anonymous visit counts and the feedback you choose to send.</p>
           <button type="button" className="btn ghost sm" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}>Back to top ↑</button>
         </div>
       </div>

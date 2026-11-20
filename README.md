@@ -47,6 +47,11 @@ npm test
 
 `netlify.toml` holds the Netlify settings. With the GitHub repo connected to Netlify, every push to `main` runs `npm test`, builds the site and publishes `dist/`. If a check fails, the deploy stops and the live site stays on the last good version.
 
+## Feedback and analytics
+
+- **Feedback:** the floating *Feedback* button (hidden during tests) and the footer's *Send feedback* link open a short form: a 1–5 rating, a message and an optional email. It posts to **Netlify Forms** through the hidden `<form name="feedback">` in `index.html`. Submissions appear under **Forms** in the Netlify dashboard. On localhost, nothing is sent and the form shows a preview message instead.
+- **Analytics:** `src/lib/analytics.js` counts page views (by route only) and a few journey events with [GoatCounter](https://www.goatcounter.com), which uses no cookies. It stays off until you set `GOATCOUNTER_CODE` in `src/config.js`. It also never runs on localhost, or for visitors whose browser sends Do Not Track or Global Privacy Control. Answers, scores and names are never sent.
+
 ## Presentation
 
 `presentation/` holds the pitch deck and handouts as editable HTML:

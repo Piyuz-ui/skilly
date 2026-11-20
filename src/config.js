@@ -14,3 +14,11 @@ export const CATALOG_ROADMAPS = [
   'python', 'java', 'cpp', 'javascript', 'typescript', 'aspnet-core', 'sql', 'golang',
   'git-github-beginner', 'kotlin', 'rust', 'swift-ui', 'php', 'ruby', 'flutter',
 ];
+
+// ─── Privacy-friendly analytics (GoatCounter) ───────────────────────────────
+// Sign up free at https://www.goatcounter.com, pick a site code (for example
+// "skilly"), and put it here. Leave it '' to turn analytics off completely.
+// GoatCounter uses no cookies and stores no personal data. Skilly never sends
+// test answers, scores or names: only which page was viewed and a short list
+// of journey events (see src/lib/analytics.js).
+export const GOATCOUNTER_CODE = '';

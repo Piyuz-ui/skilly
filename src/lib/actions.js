@@ -2,8 +2,10 @@
 import { store } from './store.js';
 import { buildAttempt, scoreAttempt, validateSetup } from './engine.js';
 import { buildPlanFromReport, buildBeginnerPlan } from './roadmap.js';
+import { trackEvent } from './analytics.js';
 
 export function chooseAudience(audience) {
+  if (audience && audience !== store.get().audience) trackEvent(`audience-${audience}`);
   store.set((s) => ({
     ...s,
     audience,
@@ -36,6 +38,7 @@ export function startTest() {
   if (s.attempt?.status === 'active') return { attempt: s.attempt };
   const attempt = buildAttempt(setup);
   store.set((st) => ({ ...st, attempt }));
+  trackEvent('test-start');
   return { attempt };
 }
 
@@ -63,6 +66,7 @@ export function goToQuestion(index) {
 // return the already-saved report id.
 export function submitAttempt(reason = 'manual') {
   let reportId = null;
+  let scored = false;
   store.set((s) => {
     const a = s.attempt;
     if (!a || a.status !== 'active') { reportId = s.reports.at(-1)?.id ?? null; return s; }
@@ -70,6 +74,7 @@ export function submitAttempt(reason = 'manual') {
     const report = scoreAttempt(a, { reason, submittedAt: Math.min(Date.now(), a.deadline) });
     const plan = buildPlanFromReport(report);
     reportId = report.id;
+    scored = true;
     return {
       ...s,
       attempt: null,
@@ -78,11 +83,13 @@ export function submitAttempt(reason = 'manual') {
       activePlanId: plan.id,
     };
   });
+  if (scored) trackEvent(`test-submit-${reason === 'timeout' ? 'timeout' : 'manual'}`);
   return reportId;
 }
 
 export function ensureBeginnerPlan(language = 'python') {
   const id = `beginner-${language}`;
+  if (!store.get().plans[id]) trackEvent(`beginner-plan-${language}`);
   store.set((s) => {
     if (s.plans[id]) return s.activePlanId === id ? s : { ...s, activePlanId: id };
     return { ...s, plans: { ...s.plans, [id]: buildBeginnerPlan(language) }, activePlanId: id };
@@ -145,6 +152,7 @@ export function setHours(pathId, hours) {
   updatePath(pathId, (p) => ({ ...p, hours }));
 }
 export function loadDemo(pathId, demo) {
+  trackEvent('demo-learner');
   updatePath(pathId, (p) => ({ ...p, ratings: { ...demo.ratings }, hours: demo.hours }));
 }
 // "Test this step": jump into the assessment flow with the step's language.

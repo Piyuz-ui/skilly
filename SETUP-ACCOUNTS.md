@@ -26,6 +26,13 @@ Go to **Build → Authentication → Get started → Sign-in method**, then enab
   - For more texts, upgrade the project to the pay-as-you-go **Blaze** plan. You can set a budget alert under *Usage and billing*.
   - For testing without sending SMS, add a fake number under **Phone numbers for testing**, for example `+91 99999 00000` with code `123456`.
 
+**Allow SMS to your users' countries.** New projects block SMS everywhere until you choose countries. Otherwise phone sign-in fails with "SMS unable to be sent until this region enabled":
+
+1. Go to **Authentication → Settings → SMS region policy**.
+2. Choose **Allow**.
+3. Add **India (IN)**, plus any other countries you need. If you use a +1 test number, add **United States (US)** too.
+4. Click **Save**.
+
 Then open **Authentication → Settings → Authorized domains** and add your live site's domain:
 
 - your Netlify address, for example `skilly-aarambh.netlify.app`;

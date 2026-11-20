@@ -124,7 +124,11 @@ const MESSAGES = {
 export function friendly(e) {
   return MESSAGES[e?.code] || 'Something went wrong. Please try again.';
 }
-const fail = (e) => { throw Object.assign(new Error(friendly(e)), { code: e?.code }); };
+const fail = (e) => {
+  // Keep the real reason in the console for debugging; users see a friendly message.
+  console.warn('[skilly account]', e?.code || '', e?.message || e);
+  throw Object.assign(new Error(friendly(e)), { code: e?.code });
+};
 
 // ─── Sign up / sign in ─────────────────────────────────────────────────────
 export async function signUpWithEmail({ name, email, password }) {

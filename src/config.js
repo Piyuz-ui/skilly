@@ -21,4 +21,4 @@ export const CATALOG_ROADMAPS = [
 // GoatCounter uses no cookies and stores no personal data. Skilly never sends
 // test answers, scores or names: only which page was viewed and a short list
 // of journey events (see src/lib/analytics.js).
-export const GOATCOUNTER_CODE = '';
+export const GOATCOUNTER_CODE = 'skilly';

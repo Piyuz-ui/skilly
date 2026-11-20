@@ -1,0 +1,73 @@
+// Java question bank. Row format documented in python.js. Append only.
+export const meta = {
+  id: 'java',
+  label: 'Java',
+  roadmap: 'java',
+  topics: [
+    { key: 'basics', label: 'Syntax & primitive types', keywords: ['basic-syntax', 'data-types', 'variables', 'type-casting', 'math'] },
+    { key: 'strings', label: 'Strings', keywords: ['string'] },
+    { key: 'control', label: 'Conditions & loops', keywords: ['conditional', 'loops'] },
+    { key: 'collections', label: 'Arrays & collections', keywords: ['array', 'collection', 'list', 'map', 'set', 'stream'] },
+    { key: 'oop', label: 'Classes & OOP', keywords: ['class', 'object', 'inheritance', 'interface', 'abstraction', 'encapsulation', 'polymorphism', 'access-specifiers', 'static'] },
+    { key: 'exceptions', label: 'Exceptions', keywords: ['exception'] },
+    { key: 'generics', label: 'Generics', keywords: ['generic'] },
+    { key: 'concurrency', label: 'Threads & concurrency', keywords: ['thread', 'concurren', 'virtual-threads'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What is printed?', 'int x = 7 / 2;\nSystem.out.println(x);', ['3', '3.5', '4', 'Compile error'], 'Dividing two ints performs integer division and discards the fraction.'],
+  ['strings', 'What does "Java".length() return?', null, ['4', '5', '3', 'It does not compile; use .size()'], 'String.length() returns the number of characters.'],
+  ['collections', 'What is the value of a[1]?', 'int[] a = new int[3];', ['0', 'null', 'Undefined garbage', 'Compile error'], 'Array elements are initialised to their default value: 0 for int.'],
+  ['control', 'What is printed?', 'for (int i = 0; i < 3; i++) {\n    System.out.print(i);\n}', ['012', '123', '0123', '01'], 'The loop runs while i < 3.'],
+  ['basics', 'Which primitive type stores true or false?', null, ['boolean', 'bool', 'bit', 'Boolean only'], 'The primitive type is boolean. Boolean is its wrapper class.'],
+  ['strings', 'What is printed?', 'System.out.println("a" + 1 + 2);', ['a12', 'a3', '3a', 'Compile error'], 'Evaluation goes left to right. Once one side is a String, + concatenates.'],
+  ['oop', 'Which keyword makes one class inherit from another?', null, ['extends', 'implements', 'inherits', 'super'], 'Classes extend a class and implement interfaces.'],
+  ['collections', 'How do you get the size of an array named arr?', null, ['arr.length', 'arr.length()', 'arr.size()', 'len(arr)'], 'length is a field on arrays. Strings use length() and collections use size().'],
+  ['basics', 'What is printed?', "System.out.println('A' + 1);", ['66', 'A1', 'B', 'Compile error'], "A char is promoted to int in arithmetic. 'A' is 65."],
+  ['exceptions', 'What happens when you access a[3] on an array of length 3?', null, ['ArrayIndexOutOfBoundsException is thrown', 'It returns 0', 'It returns null', 'Compile error'], 'Valid indexes are 0 to length − 1. Java checks bounds at runtime.'],
+  ['oop', 'Which access modifier restricts a member to its own class?', null, ['private', 'protected', 'public', 'default (no modifier)'], 'private members are visible only inside the declaring class.'],
+  ['collections', 'What does list.size() return?', 'List<String> list = new ArrayList<>();\nlist.add("a");\nlist.add("b");', ['2', '1', '0', 'It depends on capacity'], 'size() counts the elements that were added.'],
+  ['oop', 'What does static mean on a method?', null, ['It belongs to the class, so you can call it without an instance', 'It cannot be changed', 'It runs only once', 'It is private to the package'], 'Static members belong to the class itself, not to each object.'],
+  ['basics', 'What happens here?', 'final int x = 1;\nx = 2;', ['Compile error', 'x becomes 2', 'Runtime exception', 'The assignment is ignored'], 'A final local variable cannot be reassigned after initialisation.'],
+  ['strings', 'Which reliably compares the text of two String variables?', null, ['s1.equals(s2)', 's1 == s2', 's1 = s2', 's1.compare(s2)'], '== compares references. equals compares contents.'],
+  ['control', 'What is printed?', 'int x = 5;\nif (x > 3 && x < 10) System.out.print("yes");\nelse System.out.print("no");', ['yes', 'no', 'yesno', 'Compile error'], 'Both conditions are true, so the if branch runs.'],
+];
+
+export const medium = [
+  ['strings', 'What is printed?', 'String a = "hi";\nString b = new String("hi");\nSystem.out.println((a == b) + " " + a.equals(b));', ['false true', 'true true', 'false false', 'true false'], 'new String creates a distinct object, so == is false, but the contents are equal.'],
+  ['collections', 'What is the most likely result?', 'List<Integer> xs = new ArrayList<>(List.of(1, 2, 3));\nfor (Integer x : xs) {\n    if (x == 1) xs.remove(x);\n}', ['ConcurrentModificationException', 'xs becomes [2, 3]', 'IndexOutOfBoundsException', 'Infinite loop'], 'Changing the list structurally while for-each iterates over it makes the iterator fail fast. Use Iterator.remove or removeIf.'],
+  ['oop', 'Dog overrides speak() to return "Woof". What does this print?', 'Animal a = new Dog();\nSystem.out.println(a.speak());', ['Woof', 'Animal’s version of speak()', 'Compile error', 'ClassCastException'], 'Instance methods use dynamic dispatch based on the runtime type of the object.'],
+  ['exceptions', 'Which of these is a checked exception?', null, ['IOException', 'NullPointerException', 'IllegalArgumentException', 'ArithmeticException'], 'Checked exceptions extend Exception but not RuntimeException. They must be caught or declared.'],
+  ['collections', 'What is m.size(), and what does m.get("k") return?', 'Map<String, Integer> m = new HashMap<>();\nm.put("k", 1);\nm.put("k", 2);', ['1, and 2', '2, and 1', '2, and 2', '1, and 1'], 'Putting an existing key replaces its value.'],
+  ['basics', 'What is printed?', 'System.out.println(Integer.MAX_VALUE + 1);', ['-2147483648', '2147483648', 'ArithmeticException', 'Compile error'], 'int arithmetic overflows silently and wraps around to MIN_VALUE.'],
+  ['control', 'What is printed?', 'int x = 1;\nswitch (x) {\n    case 1: System.out.print("one");\n    case 2: System.out.print("two"); break;\n    default: System.out.print("d");\n}', ['onetwo', 'one', 'onetwod', 'two'], 'Without break, a classic switch falls through into the next case.'],
+  ['strings', 'Why use StringBuilder when building a string inside a loop?', null, ['It avoids creating a new String object on every concatenation', 'String does not support concatenation inside loops', 'StringBuilder is thread-safe', 'It makes Strings mutable everywhere'], 'Strings are immutable, so repeated + creates many intermediate objects.'],
+  ['oop', 'A class overrides equals() but not hashCode(). What can go wrong?', null, ['A HashSet may keep two objects that are equal()', 'It will not compile', 'equals() is ignored everywhere', 'Sorting will throw'], 'Hash-based collections use hashCode first. Equal objects must have equal hash codes.'],
+  ['generics', 'Does this compile?', 'List<String> s = new ArrayList<>();\nList<Object> o = s;', ['No — generic types are invariant', 'Yes, String is an Object', 'Yes, but it throws at runtime', 'Only with -Xlint'], 'List<String> is not a subtype of List<Object>. Use List<? extends Object> to read safely.'],
+  ['exceptions', 'What does try-with-resources require from the resource?', null, ['It implements AutoCloseable', 'It extends Thread', 'It is serializable', 'It has a finalize method'], 'Resources declared in try ( … ) are closed automatically in reverse order.'],
+  ['collections', 'What happens on the second line?', 'List<Integer> xs = Arrays.asList(1, 2, 3);\nxs.add(4);', ['UnsupportedOperationException', 'xs becomes [1, 2, 3, 4]', 'Compile error', 'IndexOutOfBoundsException'], 'Arrays.asList returns a fixed-size list backed by the array.'],
+  ['oop', 'Which is true for interfaces in Java 8 and later?', null, ['They can declare default methods with bodies', 'They can hold instance fields', 'A class can implement only one interface', 'They can have constructors'], 'Default and static methods let interfaces ship implementations.'],
+  ['basics', 'What is printed?', 'static void change(int[] a) { a = new int[]{9}; }\n\nint[] arr = {1};\nchange(arr);\nSystem.out.println(arr[0]);', ['1', '9', '0', 'NullPointerException'], 'Java passes the reference by value. Reassigning the parameter does not affect the caller’s variable.'],
+  ['control', 'What happens?', 'int i = 0;\nif (i != 0 && 10 / i > 1) System.out.print("big");', ['Nothing is printed and no exception is thrown', 'ArithmeticException', 'big', 'Compile error'], '&& short-circuits: when the left side is false, the division is never evaluated.'],
+  ['concurrency', 'Two threads each run count++ 1000 times on a shared int field with no synchronisation. What is the final value?', null, ['Any value up to 2000 — updates can be lost', 'Always 2000', 'Always 1000', 'It throws ConcurrentModificationException'], 'count++ is read-modify-write, not atomic. Use AtomicInteger or synchronisation.'],
+];
+
+export const hard = [
+  ['basics', 'What is printed?', 'Integer a = 127, b = 127;\nInteger c = 128, d = 128;\nSystem.out.println((a == b) + " " + (c == d));', ['true false', 'true true', 'false false', 'false true'], 'Autoboxing must cache Integer values from −128 to 127, so a and b are the same object. 128 is outside that range by default.'],
+  ['exceptions', 'What does f() return?', 'static int f() {\n    try { return 1; }\n    finally { return 2; }\n}', ['2', '1', 'Compile error', '3'], 'A return in finally replaces the pending return and discards any in-flight exception.'],
+  ['strings', 'What happens when s is null?', 'switch (s) {\n    case "a": break;\n    default: break;\n}', ['NullPointerException', 'The default branch runs', 'Compile error', 'Nothing happens'], 'A classic switch on a String calls hashCode(), so null throws. Java 21 pattern switches can add case null.'],
+  ['generics', 'What is printed?', 'List<String> a = new ArrayList<>();\nList<Integer> b = new ArrayList<>();\nSystem.out.println(a.getClass() == b.getClass());', ['true', 'false', 'Compile error', 'ClassCastException'], 'Type erasure removes type arguments at runtime. Both are just ArrayList.'],
+  ['generics', 'Given List<? extends Number> nums, what does nums.add(1) do?', null, ['It does not compile', 'Adds 1', 'Throws UnsupportedOperationException', 'Adds 1 as a Double'], 'With ? extends, the exact element type is unknown, so you can only read Numbers. You cannot add (except null).'],
+  ['concurrency', 'What does marking a field volatile guarantee?', null, ['Writes are visible to other threads, but count++ is still not atomic', 'All operations on it are atomic', 'Only one thread can access it at a time', 'It is stored on the stack'], 'volatile provides visibility and ordering, not mutual exclusion.'],
+  ['collections', 'A mutable key is put into a HashMap, then a field used by hashCode() is changed. What does map.get(key) most likely return?', null, ['null — the lookup searches the wrong bucket', 'The original value', 'It throws ConcurrentModificationException', 'It rehashes automatically'], 'The entry stays in the bucket for the old hash. Keys should be immutable.'],
+  ['oop', 'Parent and Child both declare static void hello(). What does this call?', 'Parent p = new Child();\np.hello();', ['Parent.hello', 'Child.hello', 'Compile error', 'Both, in order'], 'Static methods are hidden, not overridden. The call is resolved from the declared type.'],
+  ['basics', 'What does 0.1 + 0.2 == 0.3 evaluate to for doubles?', null, ['false', 'true', 'It does not compile', 'It throws ArithmeticException'], 'Binary floating point cannot represent these decimals exactly. Use BigDecimal or a tolerance.'],
+  ['basics', 'Which line fails to compile?', "char c = 'a';\nc += 1;      // line 2\nc = c + 1;   // line 3", ['Line 3', 'Line 2', 'Both', 'Neither'], 'Compound assignment inserts an implicit cast. c + 1 is an int, which cannot be assigned to char without a cast.'],
+  ['collections', 'What is printed?', 'Stream.of(1, 2, 3)\n      .peek(System.out::print)\n      .map(x -> x * 2);', ['Nothing', '123', '246', '123246'], 'Streams are lazy. Without a terminal operation, nothing runs.'],
+  ['exceptions', 'catch (Exception e) is placed before catch (IOException e) on the same try. What happens?', null, ['Compile error: the second catch is unreachable', 'IOException is caught by the second block', 'Runtime error', 'The first block is skipped for IOException'], 'A more general catch earlier makes later, more specific catches unreachable.'],
+  ['strings', 'What is printed?', 'String s = "ab";\nSystem.out.println(s == "a" + "b");', ['true', 'false', 'Compile error', 'It depends on the JVM'], '"a" + "b" is a compile-time constant, so it is interned as the same "ab" literal.'],
+  ['collections', 'What does concurrentHashMap.put(null, 1) do?', null, ['Throws NullPointerException', 'Stores the value under a null key', 'Is ignored', 'Throws IllegalStateException'], 'Unlike HashMap, ConcurrentHashMap allows neither null keys nor null values.'],
+  ['concurrency', 'Two threads call a synchronized instance method on two different objects. What happens?', null, ['They can run at the same time', 'One waits for the other', 'Deadlock', 'IllegalMonitorStateException'], 'A synchronized instance method locks on this. Different objects have different monitors.'],
+  ['exceptions', 'What does Optional.of(null) do?', null, ['Throws NullPointerException', 'Returns Optional.empty()', 'Returns an Optional containing null', 'Does not compile'], 'Use Optional.ofNullable when the value may be null.'],
+];

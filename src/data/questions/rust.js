@@ -1,0 +1,73 @@
+// Rust question bank (Rust 2021 edition). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'rust',
+  label: 'Rust',
+  roadmap: 'rust',
+  topics: [
+    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'introduction', 'integers'] },
+    { key: 'ownership', label: 'Ownership & moves', keywords: ['ownership', 'move', 'copy', 'clone'] },
+    { key: 'borrowing', label: 'Borrowing & lifetimes', keywords: ['borrow', 'reference', 'lifetime'] },
+    { key: 'enums', label: 'Enums & pattern matching', keywords: ['enum', 'pattern', 'match', 'option'] },
+    { key: 'errors', label: 'Error handling', keywords: ['error', 'result', 'panic'] },
+    { key: 'collections', label: 'Collections & iterators', keywords: ['vector', 'collection', 'hashmap', 'iterator', 'string'] },
+    { key: 'traits', label: 'Structs, traits & generics', keywords: ['trait', 'struct', 'generic', 'impl'] },
+    { key: 'concurrency', label: 'Smart pointers & concurrency', keywords: ['concurren', 'thread', 'smart-pointer', 'box', 'rc', 'arc', 'mutex'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What happens here?', 'let x = 5;\nx = 6;', ['A compile error: cannot assign twice to an immutable variable', 'x becomes 6', 'A runtime panic', 'A warning only'], 'Bindings are immutable by default. Use let mut.'],
+  ['basics', 'What is x afterwards?', 'let mut x = 5;\nx += 1;', ['6', '5', 'A compile error', '51'], 'mut allows reassignment.'],
+  ['basics', 'What is the default type of an unannotated integer literal like 42?', null, ['i32', 'i64', 'u32', 'isize'], 'Integer literals default to i32 when nothing else constrains them.'],
+  ['collections', 'What does s.len() return?', 'let s = String::from("hi");', ['2', '3', '1', 'It does not compile'], 'len counts bytes. For ASCII, that equals the number of characters.'],
+  ['basics', 'What is printed?', 'for i in 0..3 {\n    print!("{}", i);\n}', ['012', '0123', '123', '321'], 'a..b excludes b.'],
+  ['basics', 'What is printed?', 'for i in 0..=3 {\n    print!("{}", i);\n}', ['0123', '012', '123', '1234'], '..= is the inclusive range.'],
+  ['basics', 'What does add(2, 3) return?', 'fn add(a: i32, b: i32) -> i32 {\n    a + b\n}', ['5', '()', 'A compile error: missing return', '23'], 'The last expression without a semicolon is the return value.'],
+  ['enums', 'What are the variants of Option<T>?', null, ['Some(T) and None', 'Ok(T) and Err(E)', 'Value and Null', 'Just and Nothing'], 'Option replaces null for values that may be missing.'],
+  ['enums', 'What is the value?', 'match 2 {\n    1 => "one",\n    2 => "two",\n    _ => "many",\n}', ['"two"', '"one"', '"many"', 'A compile error'], 'match takes the first matching arm. _ catches the rest.'],
+  ['collections', 'What does v.len() return?', 'let v = vec![1, 2, 3];', ['3', '2', '4', 'It does not compile'], 'vec! builds a Vec<i32>.'],
+  ['basics', 'What does println!("{}", 7 / 2) print?', null, ['3', '3.5', '4', 'A compile error'], 'Integer division truncates.'],
+  ['traits', 'Given struct Point { x: i32, y: i32 } and a value p, how do you read x?', null, ['p.x', 'p->x', 'p[x]', 'p::x'], 'Fields use dot notation, even through references, thanks to auto-dereferencing.'],
+  ['errors', 'What are the variants of Result<T, E>?', null, ['Ok(T) and Err(E)', 'Some(T) and None', 'Success and Failure', 'Value and Error'], 'Result represents an operation that can fail.'],
+  ['basics', 'What does the ! in println! indicate?', null, ['println is a macro', 'It cannot fail', 'It is unsafe', 'It returns never'], 'Macros expand at compile time and can take a variable number of arguments.'],
+  ['basics', 'Which command creates a new Rust project?', null, ['cargo new', 'rustc init', 'rust new', 'cargo create'], 'Cargo is Rust’s build tool and package manager.'],
+  ['basics', 'What is x?', 'let x = 5;\nlet x = x * 2;', ['10', '5', 'A compile error', '25'], 'Shadowing creates a new binding with the same name.'],
+];
+
+export const medium = [
+  ['ownership', 'What happens?', 'let s1 = String::from("a");\nlet s2 = s1;\nprintln!("{}", s1);', ['Compile error: borrow of moved value s1', 'Prints a', 'Prints an empty string', 'A runtime panic'], 'Assigning a String moves ownership. s1 is no longer valid.'],
+  ['ownership', 'What is printed?', 'let a = 5;\nlet b = a;\nprintln!("{}", a);', ['5', 'A compile error: value moved', '0', 'Nothing'], 'Integers implement Copy, so assignment copies instead of moving.'],
+  ['borrowing', 'What happens?', 'let mut s = String::from("a");\nlet r1 = &s;\nlet r2 = &mut s;\nprintln!("{}", r1);', ['Compile error: cannot borrow s as mutable because it is also borrowed as immutable', 'Prints a', 'A runtime panic', 'It compiles with a warning'], 'You can have many shared borrows or one mutable borrow at a time, but not both.'],
+  ['borrowing', 'Why pass &s to fn len(s: &String) instead of s?', null, ['The function borrows s, so the caller keeps ownership', 'It is faster to copy', 'References are required for strings', 'To make s mutable'], 'Borrowing lets functions use a value without taking it.'],
+  ['errors', 'What does the ? operator do on a Result?', null, ['Returns early with the Err; otherwise unwraps the Ok value', 'Panics on Err', 'Ignores the error', 'Converts it to Option'], '? keeps error propagation concise.'],
+  ['errors', 'What does None.unwrap() do?', null, ['Panics', 'Returns a default value', 'Returns null', 'Does not compile'], 'unwrap is fine in prototypes. Prefer match, ? or unwrap_or in real code.'],
+  ['enums', 'A match on an enum omits one variant and has no _ arm. What happens?', null, ['A compile error: non-exhaustive patterns', 'The missing variant is ignored', 'A runtime panic when hit', 'A warning only'], 'Exhaustiveness checking catches forgotten cases.'],
+  ['collections', 'For a vector of length 3, how do v.get(10) and v[10] differ?', null, ['get returns None; indexing panics', 'Both panic', 'Both return None', 'Indexing returns None'], 'Use get when out-of-range access is possible.'],
+  ['collections', 'What is the type of a string literal such as "hi"?', null, ['&\'static str', 'String', 'str', '&String'], 'Literals are borrowed slices stored in the binary.'],
+  ['traits', 'What must a type implement to be printed with {}?', null, ['std::fmt::Display', 'Debug', 'ToString only', 'Copy'], 'Display is for user-facing output. ToString is implemented automatically for Display types.'],
+  ['traits', 'How do you make a struct printable with {:?}?', null, ['#[derive(Debug)]', 'impl Print', '#[derive(Display)]', 'It works by default'], 'Debug can be derived. Display must be written by hand.'],
+  ['collections', 'What does this do?', 'let mut counts = HashMap::new();\n*counts.entry(word).or_insert(0) += 1;', ['Counts occurrences of word', 'Replaces the count with 1', 'Panics when the key is missing', 'Does not compile'], 'entry returns the slot, inserting 0 the first time.'],
+  ['collections', 'What does this produce?', 'vec![1, 2, 3].iter().map(|x| x * 2).collect::<Vec<_>>()', ['[2, 4, 6]', '[1, 2, 3]', 'An iterator', 'A compile error'], 'collect consumes the lazy iterator into a Vec.'],
+  ['collections', 'What happens with v.iter().map(|x| x * 2); and no collect?', null, ['Nothing runs — iterators are lazy (the compiler warns)', 'v is doubled in place', 'A new Vec is created', 'A compile error'], 'Iterator adaptors do nothing until consumed.'],
+  ['ownership', 'Why does this compile?', 'let s1 = String::from("a");\nlet s2 = s1.clone();\nprintln!("{} {}", s1, s2);', ['clone makes a deep copy, so s1 still owns its data', 'Strings are Copy', 'println! borrows by magic', 'It does not compile'], 'clone is explicit, so the cost is visible.'],
+  ['enums', 'What does if let Some(x) = opt { … } do?', null, ['Runs the block only when opt is Some, binding x', 'Panics when opt is None', 'Assigns opt to Some', 'Loops over opt'], 'if let is a concise match for one pattern.'],
+];
+
+export const hard = [
+  ['borrowing', 'What does the lifetime annotation in this signature mean?', "fn longest<'a>(a: &'a str, b: &'a str) -> &'a str", ['The result lives no longer than the shorter-lived of a and b', 'The result is static', 'a and b must be the same string', 'It allocates a new string'], 'Lifetimes describe relationships; they do not extend how long values live.'],
+  ['borrowing', 'What happens?', 'fn make() -> &String {\n    let s = String::from("x");\n    &s\n}', ['A compile error: missing lifetime / s does not live long enough', 'It returns a valid reference', 'A runtime panic', 'A memory leak'], 'Return the String itself to move ownership out.'],
+  ['concurrency', 'Why can’t an Rc<T> be moved into std::thread::spawn?', null, ['Rc is not Send — use Arc', 'Threads cannot take closures', 'Rc is not Clone', 'It can'], 'Rc’s non-atomic reference count would race across threads.'],
+  ['concurrency', 'What is the usual way to share mutable state across threads?', null, ['Arc<Mutex<T>>', 'Rc<RefCell<T>>', '&mut T in each thread', 'static mut'], 'Arc shares ownership; Mutex gives one thread access at a time.'],
+  ['traits', 'How do fn f(x: &dyn Shape) and fn f<T: Shape>(x: &T) differ?', null, ['dyn uses dynamic dispatch through a vtable; the generic is monomorphised (static dispatch)', 'They are identical', 'Generics are slower', 'dyn needs unsafe'], 'Generics trade binary size for speed. Trait objects allow mixed types.'],
+  ['concurrency', 'Why does a recursive enum such as a linked list need Box?', 'enum List { Cons(i32, Box<List>), Nil }', ['Without indirection the type would have infinite size', 'Box makes it thread-safe', 'Enums cannot hold i32', 'For pattern matching'], 'Box has a known size: one pointer.'],
+  ['concurrency', 'What happens when you call borrow_mut() twice at the same time on a RefCell?', null, ['It panics at runtime with BorrowMutError', 'A compile error', 'Both borrows succeed', 'A deadlock'], 'RefCell moves borrow checking to runtime.'],
+  ['borrowing', "What does T: 'static mean?", null, ['T contains no non-static references, so it could live for the whole program', 'T is a global variable', 'T is a string literal', 'T is allocated at compile time'], "Owned types such as String satisfy 'static."],
+  ['errors', 'How can ? convert a std::io::Error into your own error type?', null, ['Implement From<io::Error> for your error type', 'It cannot', 'Using as', 'Through unsafe'], '? calls From::from on the error.'],
+  ['traits', 'Which statement is true about Copy?', null, ['Copy requires Clone, and a type with Drop cannot be Copy', 'All structs are Copy', 'Copy types are heap-allocated', 'String is Copy'], 'Copy means a bitwise copy is a full, valid copy.'],
+  ['basics', 'In a debug build, what does 255u8 + 1 at runtime do?', null, ['Panics with an overflow error', 'Wraps to 0', 'Saturates at 255', 'Becomes 256'], 'Release builds wrap by default. Use wrapping_add or checked_add to be explicit.'],
+  ['ownership', 'What does move do in thread::spawn(move || { … })?', null, ['The closure takes ownership of the variables it captures', 'It moves the thread to another core', 'It makes the closure async', 'Nothing'], 'Spawned threads may outlive the current scope, so borrowed captures are not allowed.'],
+  ['collections', 'How do for x in v and for x in v.iter() differ for a Vec v?', null, ['The first consumes v (into_iter); the second borrows it', 'They are identical', 'The second consumes v', 'The first clones v'], 'After for x in v, v is moved and unusable.'],
+  ['traits', 'What does an unsafe block let you do?', null, ['Dereference raw pointers and call unsafe functions; the borrow checker still applies to references', 'Turn off the borrow checker', 'Ignore type errors', 'Skip bounds checks everywhere'], 'unsafe unlocks a few extra operations. It does not disable Rust’s rules.'],
+  ['enums', 'What does this match?', 'match opt {\n    Some(x) if x > 5 => "big",\n    Some(_) => "small",\n    None => "none",\n}', ['"big" only for Some with a value over 5', 'All Some values', 'A compile error', 'None'], 'Match guards add extra conditions to a pattern.'],
+  ['concurrency', 'What does it mean for a type to be Sync?', null, ['&T can be shared safely between threads', 'T can be moved to another thread', 'T is immutable', 'T uses a mutex'], 'Send is about moving values across threads. Sync is about sharing references.'],
+];

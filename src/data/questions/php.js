@@ -1,0 +1,72 @@
+// PHP question bank (PHP 8.2+). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'php',
+  label: 'PHP',
+  roadmap: 'php',
+  topics: [
+    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'introduction', 'type'] },
+    { key: 'strings', label: 'Strings', keywords: ['string'] },
+    { key: 'arrays', label: 'Arrays', keywords: ['array'] },
+    { key: 'functions', label: 'Functions', keywords: ['function', 'closure', 'arrow'] },
+    { key: 'oop', label: 'Classes & OOP', keywords: ['class', 'oop', 'object', 'interface', 'trait', 'inheritance'] },
+    { key: 'errors', label: 'Errors & exceptions', keywords: ['error', 'exception'] },
+    { key: 'web', label: 'Web, security & tooling', keywords: ['security', 'session', 'pdo', 'composer', 'xss', 'sql-injection', 'form'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'How do PHP variable names begin?', null, ['With $', 'With @', 'With var', 'With #'], 'Example: $name = "Ann";'],
+  ['strings', 'What is printed?', 'echo "Hi " . "there";', ['Hi there', 'Hi + there', 'Hithere', 'A syntax error'], 'The dot operator concatenates strings.'],
+  ['basics', 'What is printed?', '$a = 5;\n$b = "5";\nvar_dump($a == $b);', ['bool(true)', 'bool(false)', 'int(5)', 'An error'], '== compares after type juggling.'],
+  ['basics', 'What does 5 === "5" evaluate to?', null, ['false', 'true', 'null', 'An error'], '=== requires the same type and value.'],
+  ['arrays', 'What does count([1, 2, 3]) return?', null, ['3', '2', '4', '6'], 'count gives the number of elements.'],
+  ['arrays', 'What is printed?', '$u = ["name" => "Ann"];\necho $u["name"];', ['Ann', 'name', 'Array', 'An error'], 'Associative arrays map keys to values.'],
+  ['strings', 'What does strlen("hello") return?', null, ['5', '4', '6', 'hello'], 'strlen counts bytes, which equals characters for ASCII.'],
+  ['basics', 'What does 7 / 2 evaluate to?', null, ['3.5', '3', '4', 'An error'], '/ returns a float when the result is not whole. Use intdiv(7, 2) for 3.'],
+  ['functions', 'What does add(2, 3) return?', 'function add($a, $b) { return $a + $b; }', ['5', '23', 'null', 'An error'], 'return sends the value back.'],
+  ['strings', 'With $x = 3, what do "Value: $x" and \'Value: $x\' print?', null, ['Value: 3 and Value: $x', 'Both Value: 3', 'Both Value: $x', 'An error'], 'Only double-quoted strings interpolate variables.'],
+  ['basics', 'What does isset($undefinedVar) return?', null, ['false', 'true', 'null', 'It throws'], 'isset checks that a variable exists and is not null.'],
+  ['arrays', 'What does $arr[] = 4; do?', null, ['Appends 4 to the array', 'Replaces the array with [4]', 'Sets index 0 to 4', 'A syntax error'], 'An empty-bracket assignment appends, like array_push.'],
+  ['strings', 'What does strtoupper("php") return?', null, ['"PHP"', '"Php"', '"php"', 'An error'], 'strtolower does the opposite.'],
+  ['basics', 'Which tag starts a block of PHP code?', null, ['<?php', '<php>', '<script php>', '#!php'], 'A file can mix HTML with <?php … ?> blocks.'],
+  ['basics', 'Which are valid single-line comments in PHP?', null, ['// and #', '-- and #', '// only', '<!-- -->'], '/* … */ is for multi-line comments.'],
+  ['arrays', 'What is printed?', 'foreach ([1, 2, 3] as $n) { echo $n; }', ['123', '1 2 3', '6', 'Array'], 'foreach iterates over each value.'],
+];
+
+export const medium = [
+  ['basics', 'In PHP 8, what does "0" == false evaluate to?', null, ['true', 'false', 'null', 'An error'], 'Compared with a bool, "0" converts to false. "0" is one of PHP’s falsy strings.'],
+  ['basics', 'In PHP 8, what does 0 == "a" evaluate to?', null, ['false', 'true', 'null', 'A TypeError'], 'PHP 8 compares a number with a non-numeric string as strings. In PHP 7 this was true.'],
+  ['arrays', 'What is printed?', 'foreach (["a" => 1, "b" => 2] as $k => $v) { echo "$k$v"; }', ['a1b2', '12', 'ab', 'a=1b=2'], 'The $key => $value form gives both.'],
+  ['functions', 'What does this return?', 'array_map(fn($x) => $x * 2, [1, 2, 3])', ['[2, 4, 6]', '[1, 2, 3]', '12', 'An error'], 'Arrow functions (fn) return their single expression.'],
+  ['functions', 'What is $n afterwards?', 'function inc(&$x) { $x++; }\n$n = 1;\ninc($n);', ['2', '1', 'null', 'An error'], '& passes by reference, so the caller’s variable changes.'],
+  ['basics', 'What does $q = $_GET["q"] ?? "none"; do when q is missing?', null, ['Sets $q to "none" without a warning', 'Throws an error', 'Sets $q to null', 'Shows an undefined-index warning'], '?? checks isset and falls back.'],
+  ['oop', 'What is printed?', 'class User {\n    public function __construct(public string $name) {}\n}\necho (new User("Ann"))->name;', ['Ann', 'name', 'An error: property not declared', 'User'], 'Constructor property promotion (PHP 8) declares and assigns in one step.'],
+  ['oop', 'Inside a class method, what does $this refer to?', null, ['The current object instance', 'The class itself', 'The parent class', 'The global scope'], 'Use self:: or static:: for class-level members.'],
+  ['errors', 'What catches an exception thrown inside try?', 'try { throw new Exception("x"); }\ncatch (Exception $e) { echo $e->getMessage(); }', ['The catch block, which prints x', 'Nothing — it is fatal', 'finally only', 'A warning'], 'getMessage returns the text given to the exception.'],
+  ['arrays', 'What does sort($arr) return?', null, ['true — it sorts $arr in place', 'A new sorted array', 'null', 'The old array'], 'Most PHP sort functions modify the array they are given.'],
+  ['arrays', 'What is the result of [1, 2] + [3, 4, 5]?', null, ['[1, 2, 5]', '[1, 2, 3, 4, 5]', '[4, 6, 5]', 'An error'], '+ keeps the left side’s keys and adds only missing keys. Use array_merge to append.'],
+  ['strings', 'What does json_encode(["a" => 1]) return?', null, ['{"a":1}', '["a",1]', 'a=1', 'Array'], 'Associative arrays encode as JSON objects.'],
+  ['strings', 'Why is if (strpos("hello", "h")) a bug?', null, ['strpos returns 0 (falsy) for a match at the start; compare !== false', 'strpos is case-insensitive', 'It always returns true', 'strpos needs 3 arguments'], 'In PHP 8, str_contains() avoids this pitfall.'],
+  ['oop', 'How does a class implement an interface?', null, ['class A implements Loggable', 'class A extends Loggable', 'class A uses Loggable', 'class A : Loggable'], 'A class can implement many interfaces but extend only one class.'],
+  ['basics', 'What is "12abc" + 1 in PHP 8?', null, ['13, with a warning', 'A TypeError', '"12abc1"', '1'], 'A leading-numeric string is converted using its numeric prefix, and PHP warns.'],
+  ['basics', 'What does this return?', 'match ("1") {\n    1 => "int",\n    "1" => "string",\n}', ['"string"', '"int"', 'An UnhandledMatchError', 'null'], 'match compares with ===, unlike switch.'],
+];
+
+export const hard = [
+  ['web', 'What is the safest way to put user input into a SQL query?', null, ['A prepared statement with bound parameters (PDO or mysqli)', 'addslashes()', 'Escaping quotes by hand', 'strip_tags()'], 'Bound parameters are never parsed as SQL.'],
+  ['web', 'How do you prevent XSS when echoing user input into HTML?', null, ['htmlspecialchars($input, ENT_QUOTES)', 'strtolower', 'trim', 'md5'], 'Escape output for the context it appears in.'],
+  ['web', 'How should passwords be stored?', null, ['password_hash() and checked with password_verify()', 'md5()', 'sha1() with no salt', 'base64_encode()'], 'password_hash uses a slow, salted algorithm such as bcrypt or Argon2.'],
+  ['web', 'Why does session_start() fail after HTML has been echoed?', null, ['Headers (the session cookie) must be sent before any output', 'Sessions need a database', 'It is called twice', 'It does not fail'], 'Output buffering can work around this, but calling it first is cleaner.'],
+  ['oop', 'Inside a parent class method, what does static:: refer to?', null, ['The class the method was called on (late static binding)', 'Always the parent class', 'The interface', 'The global scope'], 'self:: always means the class where the code is written.'],
+  ['oop', 'What are traits for?', null, ['Reusing methods across unrelated classes', 'Multiple inheritance of state only', 'Declaring interfaces', 'Typing arrays'], 'Use them with use TraitName; inside a class.'],
+  ['functions', 'What does a function containing yield return?', null, ['A Generator that produces values lazily', 'An array', 'The first value', 'null'], 'Generators process large data with little memory.'],
+  ['functions', 'What is printed?', '$x = 1;\n$f = function () use ($x) { return $x; };\n$x = 2;\necho $f();', ['1', '2', 'null', 'An error'], 'use captures by value when the closure is created. Use &$x to capture by reference.'],
+  ['arrays', 'What is $a afterwards?', '$a = [1, 2, 3];\n$b = $a;\n$b[] = 4;', ['[1, 2, 3]', '[1, 2, 3, 4]', '[4]', 'An error'], 'Arrays are assigned by value (copy-on-write).'],
+  ['oop', 'What is $o1->x afterwards?', '$o1 = new stdClass;\n$o1->x = 1;\n$o2 = $o1;\n$o2->x = 5;', ['5', '1', 'null', 'An error'], 'Objects are assigned by handle, so both variables point to one object.'],
+  ['arrays', 'What is $a after these loops?', '$a = [1, 2, 3];\nforeach ($a as &$v) {}\nforeach ($a as $v) {}', ['[1, 2, 2]', '[1, 2, 3]', '[3, 3, 3]', '[1, 1, 1]'], '$v stays a reference to the last element, so the second loop writes into it. unset($v) after a by-reference loop.'],
+  ['basics', 'With declare(strict_types=1), what happens when you pass "5" to function f(int $n)?', null, ['A TypeError', 'It is converted to 5', 'A warning', 'null'], 'Strict mode disables scalar type coercion for calls made from that file.'],
+  ['oop', 'What happens when you assign to a readonly property after it is initialised?', null, ['An Error is thrown', 'The value changes', 'A warning', 'Nothing'], 'readonly properties (PHP 8.1) can be set only once, from inside the class.'],
+  ['oop', 'What does $user?->getAddress()?->city return when getAddress() returns null?', null, ['null', 'An Error', '""', 'false'], 'The nullsafe operator short-circuits the rest of the chain.'],
+  ['oop', 'What does Status::Active->value return for enum Status: string { case Active = "active"; }?', null, ['"active"', '"Active"', '0', 'An error'], 'Backed enums (PHP 8.1) expose ->value. Status::from("active") goes the other way.'],
+  ['web', 'What does Composer’s PSR-4 autoloading do?', null, ['Maps namespaces to folders so classes load on first use', 'Minifies PHP', 'Caches database queries', 'Runs tests'], 'Configure it under "autoload" in composer.json.'],
+];

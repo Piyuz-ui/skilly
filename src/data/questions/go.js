@@ -1,0 +1,73 @@
+// Go question bank (Go 1.22+). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'go',
+  label: 'Go',
+  roadmap: 'golang',
+  topics: [
+    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'zero-values', 'constants', 'packages'] },
+    { key: 'slices', label: 'Slices & maps', keywords: ['slice', 'array', 'map', 'make'] },
+    { key: 'functions', label: 'Functions & defer', keywords: ['function', 'defer', 'closure', 'variadic', 'multiple-return'] },
+    { key: 'errors', label: 'Errors & panics', keywords: ['error', 'panic', 'recover'] },
+    { key: 'types', label: 'Structs & interfaces', keywords: ['struct', 'interface', 'method', 'embedding', 'type-assertion', 'type-switch'] },
+    { key: 'pointers', label: 'Pointers', keywords: ['pointer', 'memory'] },
+    { key: 'concurrency', label: 'Goroutines & channels', keywords: ['goroutine', 'channel', 'select', 'sync', 'mutex', 'waitgroup', 'context', 'concurrency'] },
+    { key: 'generics', label: 'Generics', keywords: ['generic'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What does x := 5 do inside a function?', null, ['Declares x and infers its type as int', 'Compares x to 5', 'Assigns to an existing x only', 'Declares a constant'], ':= is the short variable declaration.'],
+  ['basics', 'What does fmt.Println("Go", 1) print?', null, ['Go 1, followed by a newline', 'Go1', '"Go" 1', 'Go, 1'], 'Println separates operands with spaces and adds a newline.'],
+  ['basics', 'What are the zero values of int and string?', null, ['0 and ""', '0 and nil', 'nil and nil', 'Undefined'], 'Every type has a zero value. Variables are never uninitialised.'],
+  ['slices', 'What is len(s)?', 's := []int{1, 2, 3}', ['3', '2', '4', 'It depends on capacity'], 'len returns the number of elements.'],
+  ['basics', 'Which loop keyword does Go have?', null, ['for only', 'for and while', 'for, while and do', 'loop'], 'for covers classic, condition-only and infinite loops.'],
+  ['types', 'When is an identifier exported from a package?', null, ['When it starts with an uppercase letter', 'When it is marked public', 'When it is in main', 'When it starts with an underscore'], 'Capitalised names are visible outside the package.'],
+  ['functions', 'Which signature returns an int and an error?', null, ['func f() (int, error)', 'func f() int, error', 'func f(): [int, error]', 'func f() -> (int, error)'], 'Multiple return types go in parentheses.'],
+  ['slices', 'What is m["b"]?', 'm := map[string]int{"a": 1}', ['0', 'nil', 'It panics', 'A compile error'], 'A missing key returns the value type’s zero value. Use v, ok := m["b"] to tell the difference.'],
+  ['errors', 'What is the idiomatic way to handle a returned error?', null, ['if err != nil { return err }', 'try { … } catch', 'Ignore it', 'panic on every error'], 'Go uses explicit error values.'],
+  ['slices', 'Why write s = append(s, 4)?', null, ['append may return a new underlying array, so you must use its result', 'append returns nothing', 'append sorts the slice', 'For style only'], 'Always assign the result of append.'],
+  ['basics', 'Where does a Go program start running?', null, ['func main() in package main', 'func init() in any package', 'The first function in the file', 'func start()'], 'init functions run first, but main is the entry point.'],
+  ['basics', 'What is 7 / 2 with int operands?', null, ['3', '3.5', '4', 'A compile error'], 'Integer division truncates toward zero.'],
+  ['basics', 'What happens if you import a package and never use it?', null, ['A compile error', 'A warning', 'Nothing', 'A runtime panic'], 'Unused imports and unused local variables are compile errors.'],
+  ['slices', 'In for i, v := range []string{"a", "b"}, what are i and v?', null, ['The index and the element', 'The element and the index', 'The key and its pointer', 'Only the element'], 'Use _ to ignore either value.'],
+  ['basics', 'How do you join two strings a and b?', null, ['a + b', 'a . b', 'concat(a, b)', 'a & b'], 'For many pieces, strings.Builder is more efficient.'],
+  ['functions', 'When does a deferred call run?', null, ['When the surrounding function returns', 'Immediately', 'At program exit', 'In a new goroutine'], 'defer is commonly used for cleanup, such as closing files.'],
+];
+
+export const medium = [
+  ['functions', 'What is printed?', 'for i := 1; i <= 3; i++ {\n    defer fmt.Print(i)\n}', ['321', '123', '333', '111'], 'Deferred calls run last-in, first-out.'],
+  ['slices', 'What is a afterwards?', 'a := []int{1, 2, 3}\nb := a[:2]\nb[0] = 9', ['[9 2 3]', '[1 2 3]', '[9 2]', 'It panics'], 'A slice of a slice shares the same underlying array.'],
+  ['slices', 'What order does range over a map visit keys in?', null, ['Unspecified — do not rely on it', 'Insertion order', 'Sorted order', 'Reverse insertion order'], 'Sort the keys explicitly when order matters.'],
+  ['types', 'What is c.n afterwards?', 'type Counter struct{ n int }\nfunc (c Counter) Inc() { c.n++ }\n\nc := Counter{}\nc.Inc()', ['0', '1', 'A compile error', 'It panics'], 'A value receiver gets a copy. Use func (c *Counter) Inc() to mutate.'],
+  ['slices', 'What happens?', 'var m map[string]int\nm["a"] = 1', ['It panics: assignment to entry in nil map', 'm becomes {"a": 1}', 'A compile error', 'Nothing'], 'Initialise with make(map[string]int) or a literal first.'],
+  ['concurrency', 'What happens in main?', 'ch := make(chan int)\nch <- 1\nfmt.Println(<-ch)', ['fatal error: all goroutines are asleep — deadlock!', 'Prints 1', 'Prints 0', 'A compile error'], 'A send on an unbuffered channel blocks until a receiver is ready, and none ever is.'],
+  ['errors', 'An error was wrapped with fmt.Errorf("ctx: %w", ErrNotFound). How do you test for it?', null, ['errors.Is(err, ErrNotFound)', 'err == ErrNotFound', 'err.Type() == ErrNotFound', 'strings.Contains(err, "not found")'], '%w wraps the error, and errors.Is unwraps the chain.'],
+  ['types', 'How does a type implement an interface?', null, ['By having all of its methods — no declaration needed', 'With an implements keyword', 'By embedding the interface', 'By registering it'], 'Interface satisfaction is implicit.'],
+  ['concurrency', 'What is printed?', 'func main() {\n    go fmt.Println("hi")\n}', ['Usually nothing — main returns before the goroutine runs', 'Always hi', 'A compile error', 'It deadlocks'], 'The program exits when main returns. Use a WaitGroup or channel to wait.'],
+  ['concurrency', 'What is sync.WaitGroup used for?', null, ['Waiting for a group of goroutines to finish', 'Locking a map', 'Sending values between goroutines', 'Timing out operations'], 'Call Add before starting work, Done when each finishes, and Wait to block.'],
+  ['concurrency', 'What happens when you range over a channel that the sender closes?', null, ['The loop receives the remaining values, then exits', 'It panics', 'It loops forever with zero values', 'It returns immediately'], 'Only the sender should close a channel.'],
+  ['types', 'When can two struct values be compared with ==?', null, ['When all their fields are comparable', 'Never', 'Always', 'Only if they are pointers'], 'Structs containing slices, maps or functions are not comparable.'],
+  ['basics', 'What is len("héllo")?', null, ['6', '5', '4', 'It panics'], 'len counts bytes. é is two bytes in UTF-8. Use utf8.RuneCountInString for characters.'],
+  ['types', 'What does a type switch do?', 'switch v := x.(type) {\ncase int:    // …\ncase string: // …\n}', ['Branches on the dynamic type stored in interface x', 'Converts x to every type', 'Checks x for nil', 'Is not valid Go'], 'Inside each case, v has the matching concrete type.'],
+  ['pointers', 'What is x?', 'x := 1\np := &x\n*p = 5', ['5', '1', 'The address', 'A compile error'], 'Writing through the pointer changes x.'],
+  ['concurrency', 'What does a select with a default case do when no channel is ready?', null, ['Runs default immediately (a non-blocking operation)', 'Blocks forever', 'Panics', 'Picks a random channel anyway'], 'Without default, select blocks until a case can proceed.'],
+];
+
+export const hard = [
+  ['slices', 'What is b[3]?', 'a := make([]int, 3, 10)\nb := append(a, 1)\nc := append(a, 2)\n_ = c', ['2', '1', '0', 'It panics'], 'a has spare capacity, so both appends write index 3 of the same array. The second write wins.'],
+  ['errors', 'What is printed?', 'type MyErr struct{}\nfunc (*MyErr) Error() string { return "x" }\n\nvar p *MyErr = nil\nvar err error = p\nfmt.Println(err != nil)', ['true', 'false', 'It panics', 'A compile error'], 'The interface holds a (type, nil-pointer) pair, which is not a nil interface. Return a plain nil error instead.'],
+  ['concurrency', 'In Go 1.22+, what happens when goroutines started in a for i := 0; i < 3; i++ loop print i?', null, ['Each prints its own iteration value (0, 1, 2 in some order)', 'All print 3', 'All print 0', 'A compile error'], 'Since Go 1.22, each iteration gets a fresh loop variable.'],
+  ['functions', 'What is printed?', 'x := 1\ndefer fmt.Println(x)\nx = 2', ['1', '2', '0', 'Nothing'], 'Arguments to a deferred call are evaluated when defer runs, not when the call executes.'],
+  ['errors', 'Where does recover() stop a panic?', null, ['Only when called directly inside a deferred function in the panicking goroutine', 'Anywhere in the program', 'In any goroutine', 'Only in main'], 'It cannot recover panics from other goroutines.'],
+  ['concurrency', 'What does v, ok := <-ch return after ch is closed and drained?', null, ['The zero value and ok == false', 'It blocks forever', 'It panics', 'The last value and ok == true'], 'Receiving from a closed channel never blocks.'],
+  ['concurrency', 'What happens when you send on a closed channel?', null, ['It panics', 'The value is dropped', 'It blocks', 'The channel reopens'], 'Closing is a signal from the sender that no more values will come.'],
+  ['concurrency', 'Several goroutines write to one plain map. What is a safe fix?', null, ['Guard it with a sync.Mutex (or use sync.Map for suitable patterns)', 'Nothing — maps are thread-safe', 'Use a bigger map', 'Use runtime.Gosched()'], 'Concurrent map writes can crash with “fatal error: concurrent map writes”.'],
+  ['concurrency', 'What happens when you cancel a parent context.Context?', null, ['Every context derived from it is cancelled too', 'Only the parent is cancelled', 'Children are unaffected until they time out', 'It panics'], 'Pass ctx down and check ctx.Done() or ctx.Err().'],
+  ['types', 'Only *T has method M(). Is a T value assignable to an interface requiring M?', null, ['No — T’s method set does not include pointer-receiver methods', 'Yes, always', 'Yes, but only through reflection', 'Only if T is a struct'], 'Assign &t instead.'],
+  ['generics', 'What does T int | float64 mean in func Sum[T int | float64](xs []T) T?', null, ['T is constrained to exactly int or float64', 'T can be any type', 'T is a union value at runtime', 'Sum returns both types'], 'Use ~int to also allow types whose underlying type is int.'],
+  ['basics', 'What indexes does for i := range "hé" produce?', null, ['0 and 1', '0, 1 and 2', '0 only', '1 and 2'], 'Ranging over a string yields byte offsets of each rune. é starts at byte 1 and takes two bytes.'],
+  ['types', 'Struct S embeds type Logger, which has method Log(). What can you do?', null, ['Call s.Log() directly — the method is promoted', 'Nothing until you implement Log on S', 'Only call s.Logger.Log()', 'Call it only through reflection'], 'Embedding promotes fields and methods. S can still shadow them.'],
+  ['concurrency', 'ch := make(chan int, 2). With no receiver, what happens on the third send?', null, ['It blocks', 'It panics', 'It overwrites the oldest value', 'It drops the value'], 'A buffered channel blocks when the buffer is full.'],
+  ['slices', 'How many elements does copy(dst, src) copy when len(dst) = 2 and len(src) = 5?', null, ['2', '5', '0', 'It panics'], 'copy copies min(len(dst), len(src)) elements.'],
+  ['pointers', 'Is it safe to return &x where x is a local variable?', null, ['Yes — escape analysis moves x to the heap', 'No — it dangles', 'Only for ints', 'Only with new()'], 'Go manages lifetimes automatically.'],
+];

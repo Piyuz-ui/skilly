@@ -1,0 +1,18 @@
+<section id="planner">
+<p class="eyebrow">Step 5 · The SkillBridge engine</p>
+<h2>Every priority is a sum you can check</h2>
+<div class="cols">
+<div class="col">
+<div class="formula">Priority = gap × weight<br>Readiness = weighted share of target levels met<br>Weeks = hours (gap × hours per level) ÷ weekly time</div>
+<ul class="list">
+<li>Weight = share of a role’s job posts that name the skill.</li>
+<li>A prerequisite with a gap is scheduled first (HTML &amp; CSS before JavaScript).</li>
+</ul>
+</div>
+<div class="col">
+<div class="card hl" style="--i:0"><p class="tag">Demo learner · Data Analyst · 6 h/week</p><h3>43% ready</h3><p class="body">SQL ranks first: 3 levels below target × 0.9 weight = 2.7.<br>Plan: 61 hours ≈ 11 weeks. At 12 h/week: 6 weeks.</p></div>
+<p class="small">Same numbers as the Round 1 SkillBridge prototype, reproduced exactly in Skilly’s tests.</p>
+</div>
+</div>
+<aside>This is the SkillBridge core, ported rule for rule. Readiness 43% comes from: need = 0.9×4 + 0.8×3 + 0.7×4 + 0.6×3 + 0.5×3 = 12.1; have = 5.2; 5.2 ÷ 12.1 = 43%. If a judge asks about the weights: they come from 10 sampled job posts per role. Those samples are synthetic in this version, and we say so in the app; replacing them with real postings is roadmap item one.</aside>
+</section>

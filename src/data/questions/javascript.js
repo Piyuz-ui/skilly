@@ -1,0 +1,73 @@
+// JavaScript question bank (modern browsers / Node, ES2022+). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'javascript',
+  label: 'JavaScript',
+  roadmap: 'javascript',
+  topics: [
+    { key: 'basics', label: 'Variables & types', keywords: ['variable', 'data-types', 'typeof', 'let', 'const', 'var'] },
+    { key: 'coercion', label: 'Equality & coercion', keywords: ['equality', 'type-conversion', 'coercion', 'comparison'] },
+    { key: 'arrays', label: 'Arrays', keywords: ['array', 'indexed-collections'] },
+    { key: 'objects', label: 'Objects & prototypes', keywords: ['object', 'prototype', 'class', 'json'] },
+    { key: 'functions', label: 'Functions, scope & closures', keywords: ['function', 'closure', 'scope', 'hoisting', 'arrow', 'this'] },
+    { key: 'control', label: 'Control flow', keywords: ['loops', 'conditional', 'control-flow', 'exception'] },
+    { key: 'async', label: 'Async & the event loop', keywords: ['async', 'promise', 'event-loop', 'callback', 'settimeout'] },
+    { key: 'dom', label: 'DOM & browser APIs', keywords: ['dom', 'browser', 'event'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What does typeof "hi" return?', null, ['"string"', '"String"', '"text"', '"object"'], 'typeof returns a lowercase string naming the primitive type.'],
+  ['coercion', 'What is x afterwards?', 'let x = 5;\nx += "1";', ['"51"', '6', 'NaN', 'TypeError'], 'If either operand of + is a string, the other is converted and the two are concatenated.'],
+  ['arrays', 'What is [1, 2, 3].length?', null, ['3', '2', '4', 'undefined'], 'length is the highest index plus one.'],
+  ['coercion', 'What does 1 === "1" evaluate to?', null, ['false', 'true', 'TypeError', 'undefined'], '=== compares without type coercion. A number never strictly equals a string.'],
+  ['arrays', 'What is a afterwards?', 'const a = [1, 2];\na.push(3);', ['[1, 2, 3]', '[1, 2]', 'TypeError: a is const', '[3, 1, 2]'], 'const prevents reassigning the binding, not changing the array.'],
+  ['basics', 'What happens here?', 'const n = 1;\nn = 2;', ['TypeError: Assignment to constant variable', 'n becomes 2', 'Nothing — it is ignored', 'SyntaxError at load time'], 'Reassigning a const binding throws at runtime.'],
+  ['control', 'What is logged?', 'for (let i = 0; i < 3; i++) console.log(i);', ['0, 1, 2', '1, 2, 3', '0, 1, 2, 3', '3, 3, 3'], 'The loop runs while i < 3.'],
+  ['functions', 'What is add(2, 3)?', 'const add = (a, b) => a + b;', ['5', '"23"', 'undefined', 'NaN'], 'An arrow function with an expression body returns that expression implicitly.'],
+  ['objects', 'What is user.name?', 'const user = { name: "Ana", age: 30 };', ['"Ana"', 'undefined', '"name"', '30'], 'Dot notation reads a property by name.'],
+  ['basics', 'What does typeof null return?', null, ['"object"', '"null"', '"undefined"', '"number"'], 'This is a long-standing quirk kept for backward compatibility. Check for null with === null.'],
+  ['coercion', 'What does Boolean("") return?', null, ['false', 'true', '""', 'undefined'], 'The empty string is falsy. Any non-empty string is truthy.'],
+  ['basics', 'What does "Hello".toUpperCase() return?', null, ['"HELLO"', '"Hello"', '"hello"', 'It changes the original string'], 'String methods return new strings. Strings are immutable.'],
+  ['arrays', 'What is ["a", "b", "c"][1]?', null, ['"b"', '"a"', '"c"', 'undefined'], 'Array indexes start at 0.'],
+  ['basics', 'What is logged?', 'let y;\nconsole.log(y);', ['undefined', 'null', 'ReferenceError', '0'], 'A declared variable with no value is undefined.'],
+  ['dom', 'What does document.querySelector(".btn") return when several elements match?', null, ['The first matching element', 'All matching elements', 'The last matching element', 'null'], 'Use querySelectorAll for every match.'],
+  ['basics', 'What is Math.max(3, 7, 2)?', null, ['7', '3', '2', '[3, 7, 2]'], 'Math.max returns the largest of its arguments.'],
+];
+
+export const medium = [
+  ['functions', 'What is logged?', 'for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}', ['3, 3, 3', '0, 1, 2', '0, 0, 0', 'undefined × 3'], 'var is function-scoped, so all callbacks share one i, which is 3 by the time they run.'],
+  ['functions', 'What is logged?', 'for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}', ['0, 1, 2', '3, 3, 3', '2, 2, 2', 'ReferenceError'], 'let creates a fresh binding for each iteration.'],
+  ['functions', 'What is logged?', 'console.log(a);\nvar a = 1;', ['undefined', '1', 'ReferenceError', 'null'], 'var declarations are hoisted and initialised to undefined. The assignment stays in place.'],
+  ['functions', 'What happens?', 'console.log(b);\nlet b = 1;', ['ReferenceError', 'undefined', '1', 'null'], 'let and const are in the temporal dead zone until their declaration runs.'],
+  ['async', 'In what order are the letters logged?', "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nconsole.log('D');", ['A D C B', 'A B C D', 'A C D B', 'A D B C'], 'Synchronous code runs first. Microtasks (promises) run before macrotasks (timers).'],
+  ['arrays', 'What does [10, 1, 2].sort() return?', null, ['[1, 10, 2]', '[1, 2, 10]', '[10, 2, 1]', '[2, 1, 10]'], 'With no comparator, sort compares elements as strings. Use (a, b) => a - b for numbers.'],
+  ['functions', 'In strict mode, what happens on the last line?', 'const o = { n: 1, get() { return this.n; } };\nconst g = o.get;\ng();', ['TypeError — this is undefined', 'Returns 1', 'Returns undefined', 'ReferenceError'], 'Detaching a method loses its receiver. Use o.get.bind(o) or an arrow wrapper.'],
+  ['objects', 'What is a.x.y?', 'const a = { x: { y: 1 } };\nconst b = { ...a };\nb.x.y = 2;', ['2', '1', 'undefined', 'TypeError'], 'Spread makes a shallow copy. Nested objects are still shared. Use structuredClone for a deep copy.'],
+  ['functions', 'What do the two inc() calls return?', 'function counter() {\n  let c = 0;\n  return () => ++c;\n}\nconst inc = counter();\ninc();\ninc();', ['1, then 2', '1, then 1', '0, then 1', 'undefined'], 'The returned function closes over c, which persists between calls.'],
+  ['async', 'What does f() return?', 'async function f() { return 1; }', ['A Promise that resolves to 1', '1', 'undefined', 'A function'], 'Async functions always return a promise.'],
+  ['coercion', 'What does 0.1 + 0.2 === 0.3 evaluate to?', null, ['false', 'true', 'NaN', 'TypeError'], 'Floating-point rounding makes the sum 0.30000000000000004.'],
+  ['arrays', 'What does this return?', '[1, 2, 3, 4].filter(n => n % 2).map(n => n * 10)', ['[10, 30]', '[20, 40]', '[10, 20, 30, 40]', '[1, 3]'], 'n % 2 is truthy (1) for odd numbers. Those are then multiplied by 10.'],
+  ['objects', 'What is a?', 'const { a = 5 } = { a: undefined };', ['5', 'undefined', 'null', 'SyntaxError'], 'Destructuring defaults apply only when the value is undefined, not when it is null.'],
+  ['coercion', 'What does null == undefined evaluate to?', null, ['true', 'false', 'TypeError', 'null'], 'Loose equality treats null and undefined as equal to each other only. null === undefined is false.'],
+  ['async', 'What goes wrong here?', 'const res = fetch("/api");\nconst data = res.json();', ['TypeError: res.json is not a function — res is a Promise', 'data is the parsed JSON', 'SyntaxError', 'It blocks until the response arrives'], 'Forgetting await leaves you with a pending promise. Use const res = await fetch(…).'],
+  ['objects', 'What is user?.address?.city when user.address is undefined?', null, ['undefined', 'TypeError', 'null', '""'], 'Optional chaining stops at the first nullish value and returns undefined.'],
+];
+
+export const hard = [
+  ['arrays', 'What does ["1", "2", "3"].map(parseInt) return?', null, ['[1, NaN, NaN]', '[1, 2, 3]', '[NaN, NaN, NaN]', '[1, 2, NaN]'], 'map passes (value, index), so parseInt gets radix 0, 1 and 2. "2" is invalid in base 1, and "3" is invalid in base 2.'],
+  ['objects', 'What does Object.keys return?', 'Object.keys({ b: 1, 2: 1, a: 1, 1: 1 })', ['["1", "2", "b", "a"]', '["b", "2", "a", "1"]', '["a", "b", "1", "2"]', '["2", "1", "b", "a"]'], 'Integer-like keys come first in ascending order, then string keys in insertion order.'],
+  ['async', 'What is the log order?', 'async function a() {\n  console.log(1);\n  await null;\n  console.log(2);\n}\na();\nconsole.log(3);', ['1, 3, 2', '1, 2, 3', '3, 1, 2', '1, 3 (2 never logs)'], 'An async function runs synchronously until the first await. The rest continues in a microtask.'],
+  ['coercion', 'Which expression is true?', null, ['Object.is(NaN, NaN)', 'NaN === NaN', 'NaN == NaN', '[NaN].indexOf(NaN) === 0'], 'NaN is never equal to itself with == or ===, and indexOf uses ===. Object.is and includes treat NaN as equal.'],
+  ['coercion', 'What does [] + {} evaluate to?', null, ['"[object Object]"', '0', '"{}"', 'TypeError'], 'Both convert to primitives: "" + "[object Object]".'],
+  ['objects', 'What is o.x?', 'function F() {}\nF.prototype.x = 1;\nconst o = new F();\nF.prototype = { x: 2 };', ['1', '2', 'undefined', 'TypeError'], 'o keeps a link to the original prototype object. Replacing F.prototype later affects only new instances.'],
+  ['objects', 'Which statement about WeakMap is true?', null, ['Keys must be objects (or non-registered symbols) and do not prevent garbage collection', 'It is iterable', 'Keys can be any primitive', 'It has a size property'], 'Weak references make WeakMap useful for metadata attached to objects without leaking memory.'],
+  ['async', 'One of three promises rejects immediately and the others resolve later. How does Promise.all behave?', null, ['It rejects as soon as the first promise rejects', 'It waits for all, then rejects', 'It resolves with the two successes', 'It never settles'], 'Promise.all fails fast. Use Promise.allSettled to wait for every outcome.'],
+  ['arrays', 'What is arr?', 'const arr = [1, 2, 3];\narr.length = 1;', ['[1]', '[1, 2, 3]', 'TypeError', '[undefined]'], 'Setting length lower truncates the array.'],
+  ['functions', 'What is it.next(5).value?', 'function* g() {\n  const x = yield 1;\n  yield x + 1;\n}\nconst it = g();\nit.next();', ['6', '2', 'NaN', '1'], 'The value passed to next() becomes the result of the paused yield, so x = 5.'],
+  ['functions', 'What does f() return when called detached?', 'class A {\n  n = 1;\n  f = () => this.n;\n}\nconst { f } = new A();', ['1', 'undefined', 'TypeError', 'ReferenceError'], 'An arrow class field captures this from the constructor, so it stays bound to the instance.'],
+  ['arrays', 'What does Array(3).map(() => 1) produce?', null, ['An array with 3 empty slots — map skips holes', '[1, 1, 1]', '[]', 'TypeError'], 'Array(3) creates a sparse array. Use Array.from({ length: 3 }, () => 1).'],
+  ['objects', 'What is the type of the result’s d?', 'JSON.parse(JSON.stringify({ d: new Date(0) })).d', ['string', 'Date', 'number', 'undefined'], 'Date serialises via toJSON to an ISO string. JSON.parse does not revive it.'],
+  ['coercion', 'What does Number("") return?', null, ['0', 'NaN', 'undefined', 'TypeError'], 'An empty or whitespace-only string converts to 0. parseInt("") returns NaN.'],
+  ['control', 'What does f() return?', "function f() {\n  try { return 'try'; }\n  finally { return 'finally'; }\n}", ["'finally'", "'try'", 'undefined', 'SyntaxError'], 'A return in finally overrides the try block’s return.'],
+  ['objects', 'What does JSON.stringify({ [Symbol("s")]: 1, a: 2 }) return?', null, ['\'{"a":2}\'', '\'{"Symbol(s)":1,"a":2}\'', 'TypeError', '\'{"s":1,"a":2}\''], 'Symbol-keyed properties are skipped by JSON.stringify and Object.keys.'],
+];

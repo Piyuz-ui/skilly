@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Manrope:wght@400;700&display=swap">
+<style>
+@page{size:A4;margin:16mm 17mm}
+body{font-family:Manrope,Arial,sans-serif;color:#1A1020;font-size:10.5pt;line-height:1.45;margin:0}
+h1{font-family:Fredoka,Arial;font-size:24pt;margin:0 0 2pt}
+.sub{color:#5A3F78;margin-bottom:10pt}
+.tips{background:#F3EDFB;border-left:4pt solid #8A5FB8;padding:8pt 12pt;margin-bottom:12pt;border-radius:4pt}
+.tips p{margin:0 0 3pt}
+h2{font-family:Fredoka,Arial;font-size:14pt;margin:14pt 0 4pt;color:#5A3F78;break-after:avoid}
+.q{break-inside:avoid;border-top:1pt solid #E2D6F2;padding:6pt 0 4pt}
+.q b.qq{display:block;font-size:11pt;margin-bottom:2pt}
+.q p{margin:0}
+.tag{display:inline-block;font-size:8pt;font-weight:700;letter-spacing:1pt;text-transform:uppercase;color:#B0476A;margin-left:4pt}
+</style></head><body>
+<h1>Skilly · Judges’ Q&amp;A prep</h1>
+<div class="sub">AARAMBHATHON Round 3 · 43 likely questions with 20–30 second answers · every number is from the real product</div>
+
+<div class="tips">
+<p><b>How to answer:</b> answer first in one sentence, then give one number or one example, then stop. Don’t give a long speech.</p>
+<p><b>If you don’t know:</b> say “we haven’t measured that yet; here’s how we would” and give the method. Never invent a figure.</p>
+<p><b>Split the room:</b> agree beforehand who takes product, technical and business questions, so nobody talks over each other.</p>
+<p><b>Show, don’t tell:</b> if a question can be answered by clicking in the live site, click.</p>
+</div>
+
+<h2>1 · Problem and users</h2>
+<div class="q"><b class="qq">What problem are you actually solving?</b><p>Learners don’t know their real level, so they follow generic roadmaps and waste weeks on things they already know or skip what they don’t. Skilly measures first with a short timed test, then builds a week-by-week plan from those results.</p></div>
+<div class="q"><b class="qq">Who is your target user?</b><p>Indian engineering students preparing for placements first, then working professionals switching roles, and complete beginners choosing a first language. Those are the three journeys you see on the home page.</p></div>
+<div class="q"><b class="qq">How do you know this problem is real?</b><p>It’s our own experience and our classmates’: a first-year and a topper get the same 40-item roadmap. <span class="tag">Fill in</span> If you’ve done a survey or talked to students, quote the real number here. If not, say “our next step is to validate with a pilot batch”.</p></div>
+<div class="q"><b class="qq">Why would a student use this instead of just asking ChatGPT for a roadmap?</b><p>ChatGPT gives a plan based on what you say about yourself. Skilly gives a plan based on what you actually answered correctly, with the evidence shown topic by topic. Every priority is a sum you can check, gap × weight, not a guess.</p></div>
+
+<h2>2 · Product</h2>
+<div class="q"><b class="qq">Walk us through the user journey.</b><p>Choose Professional, Student or Beginner, then pick languages, take a timed test (8, 12 or 16 questions in 10, 15 or 20 minutes), read an honest report, get a weekly roadmap, then practise with tasks, quizzes and courses. Beginners skip the test and land on a four-week starter path.</p></div>
+<div class="q"><b class="qq">What’s different between the three journeys?</b><p>Professionals can choose Easy, Medium or Hard and get a detailed weak-topic roadmap. Students get Easy or Medium plus weekly tasks and quizzes. Beginners never face a test: they pick a language, or a goal and we recommend one.</p></div>
+<div class="q"><b class="qq">Why don’t students get Hard questions?</b><p>Hard questions test production-level knowledge that students usually haven’t needed yet. Failing them gives a discouraging result that isn’t useful. Students can still switch to Professional if they want the challenge.</p></div>
+<div class="q"><b class="qq">How many languages and questions do you have?</b><p>14 languages, including Python, Java, C++, JavaScript, SQL, Go, Rust and Kotlin. 672 original questions, 16 per language per level. Each has one correct answer and an explanation.</p></div>
+<div class="q"><b class="qq">What are the 23 career paths?</b><p>9 in software and web, 4 in data and AI, and 10 in core engineering: maths, embedded and IoT, VLSI, electrical, mechanical, civil, chemical, robotics, aerospace and biotech. Each step has an overview, skills, free courses (NPTEL, MIT OCW, official docs) and a mini-project.</p></div>
+<div class="q"><b class="qq">Why include core engineering branches? Most platforms are just coding.</b><p>Most students in Indian engineering colleges aren’t in CS, and they get ignored by these platforms. We give them a structured path built on NPTEL and MIT OCW, which they already trust.</p></div>
+<div class="q"><b class="qq">Are the 3D bubbles just decoration?</b><p>They make the site feel welcoming, which matters for beginners. But they turn off during a test, respect reduced-motion settings, and fall back to CSS without WebGL. Nothing important depends on them.</p></div>
+
+<h2>3 · Assessment accuracy</h2>
+<div class="q"><b class="qq">Can 12 questions really tell someone’s level?</b><p>Not a global level, and we never claim one. The verdict is scoped: “strong at Medium on 12 Python questions”. Topics with only one question are marked as needing more evidence. That honesty is the point.</p></div>
+<div class="q"><b class="qq">Who wrote the questions? Are they validated?</b><p>We wrote them. A script checks every one for a unique ID, four distinct options and one correct answer. Expert review by faculty is the first item on our four-week roadmap. We haven’t done that yet.</p></div>
+<div class="q"><b class="qq">What stops someone cheating, for example searching the answers?</b><p>Skilly is for self-improvement, not certification, so cheating only fools yourself. Still, option order is shuffled per attempt, the clock is a stored deadline that survives a refresh, and submit can’t be counted twice. For college use we’d add proctoring later.</p></div>
+<div class="q"><b class="qq">What happens if I refresh the page or my laptop dies mid-test?</b><p>The test resumes with the same questions, the same option order and the real remaining time, because the deadline is stored as a timestamp. If time ran out, it auto-submits. <span class="tag">Demo it</span></p></div>
+<div class="q"><b class="qq">Why rule-based scoring and not AI grading?</b><p>Rules are explainable and cost nothing per user. A student can see exactly why SQL ranks first. AI is better used to read job postings and extract skills, which the original SkillBridge prototype does with keyword matching and TF-IDF.</p></div>
+<div class="q"><b class="qq">Is the test adaptive?</b><p>Not yet. You pick a level and get a fixed set. Adaptive difficulty (one level up after a right answer, one down after a wrong one) was in the SkillBridge design and is on our six-month roadmap.</p></div>
+
+<h2>4 · The SkillBridge engine</h2>
+<div class="q"><b class="qq">Explain how the roadmap priority is calculated.</b><p>For each skill, priority = gap × weight. The gap is how many levels you are below the role’s target. The weight is the share of that role’s job posts that mention the skill. Readiness is the weighted share of target levels you already meet.</p></div>
+<div class="q"><b class="qq">Give a concrete example.</b><p>Our demo Data Analyst learner is 43% ready. SQL is 3 levels below target with weight 0.9, so priority 2.7, and it ranks first. The total plan is 61 hours: about 11 weeks at 6 hours a week, or 6 weeks at 12. <span class="tag">Demo it</span></p></div>
+<div class="q"><b class="qq">Where do the weights come from? Are they real?</b><p>Today they come from sample job postings: SQL appears in 9 of 10 Data Analyst samples, so its weight is 0.9. The samples are synthetic, and we say so. Replacing them with real public postings is our first next step.</p></div>
+<div class="q"><b class="qq">How do prerequisites work?</b><p>If a skill has a prerequisite you also have a gap in, the prerequisite is scheduled first, for example HTML and CSS before JavaScript. The hours are then packed into weeks according to your weekly time.</p></div>
+<div class="q"><b class="qq">How does Round 3 relate to your Round 1 SkillBridge submission?</b><p>SkillBridge was the gap-analysis engine. Skilly ports it exactly (our tests reproduce the same numbers) and wraps it in a complete product: the assessment, report, weekly roadmap, courses and the beginner journey.</p></div>
+
+<h2>5 · Technical</h2>
+<div class="q"><b class="qq">What’s your tech stack?</b><p>React 18 with Vite, and Three.js for the bubbles. It’s a static site with hash routing, so it runs on any free host and works offline once loaded. The course catalogue and 3D scene load only when needed.</p></div>
+<div class="q"><b class="qq">Where is user data stored? Why no backend?</b><p>In the browser’s local storage, validated and versioned on every load. No server means no login, no personal data collected, no running cost, and nothing to go down during a demo. Accounts and sync come with the college pilot.</p></div>
+<div class="q"><b class="qq">Doesn’t local storage mean users lose progress if they switch devices?</b><p>Yes. That’s a deliberate trade-off for a privacy-first prototype. The fix is optional accounts with cloud sync, which we need anyway for the placement-cell dashboard.</p></div>
+<div class="q"><b class="qq">How did you test it?</b><p>18 automated logic checks covering scoring, roadmaps and the SkillBridge numbers. 672 questions validated, and 161 course links checked to load. We also walked every journey by hand: refresh mid-test, timer expiry, double submit, empty survey, phone width, no WebGL.</p></div>
+<div class="q"><b class="qq">What was the hardest bug?</b><p>Switching from a long career path to a shorter one crashed the viewer, because it kept the old step index. We fixed it by resetting the view per path. Another one: Beginner skipped the language question entirely, and we caught it in testing.</p></div>
+<div class="q"><b class="qq">Where does the course content come from?</b><p>1,630 topics with 3,899 resources from roadmap.sh’s open roadmaps, cached for the weekly plans, plus curated free courses (NPTEL, MIT OCW, official docs). We link to and credit the original sources rather than copying them.</p></div>
+<div class="q"><b class="qq">Is it mobile-friendly and accessible?</b><p>Yes. It’s tested at 375 px phone width, works with the keyboard, has a reduced-motion mode, and has a CSS fallback when 3D isn’t available. <span class="tag">Demo it</span> on a phone if asked.</p></div>
+<div class="q"><b class="qq">Did you use AI tools to build this?</b><p>Answer honestly. For example: “Yes, we used AI coding assistants to move faster, the way most teams do now. The product decisions, the SkillBridge engine design, the testing and the content choices are ours, and we can explain any part of the code.” Make sure every member can explain the scoring and the planner.</p></div>
+
+<h2>6 · Business and scale</h2>
+<div class="q"><b class="qq">How will you make money?</b><p>It stays free for learners. Colleges pay for a placement-cell dashboard that shows where their whole batch stands before placement season, plus downloadable batch reports.</p></div>
+<div class="q"><b class="qq">How does it scale to a lakh users?</b><p>Static files on a CDN, so there’s almost no cost per extra user and no server to overload. When accounts are added, only the sync layer needs a backend.</p></div>
+<div class="q"><b class="qq">Who are your competitors?</b><p>Static roadmap sites like roadmap.sh, quiz platforms, and course platforms. Roadmap sites give everyone the same list, and quiz sites give a score but no next step. Skilly connects the two: test, then a plan from the results. We build on open resources rather than replacing them.</p></div>
+<div class="q"><b class="qq">What stops a big platform copying this?</b><p>Nothing stops them copying features. Our advantage is focus: Indian engineering students across all branches, NPTEL-based paths, regional languages next, and college partnerships for the dashboard data.</p></div>
+<div class="q"><b class="qq">How would you get your first 1,000 users?</b><p>Through our own college and nearby ones: placement cells, coding clubs and department WhatsApp groups. A free batch report for a placement cell gets a whole class onboarded at once.</p></div>
+
+<h2>7 · Future and impact</h2>
+<div class="q"><b class="qq">What would you build next with more time?</b><p>In the next 4 weeks: real job-post data and expert question review. In 3 months: accounts and the placement-cell dashboard. In 6 months: Hindi and regional languages, adaptive tests and mentor review of projects.</p></div>
+<div class="q"><b class="qq">How will you measure if Skilly works?</b><p>Re-test scores after a few weeks on the plan, the share of weekly tasks completed, and, in the pilot, placement-round results compared with students not using it.</p></div>
+<div class="q"><b class="qq">What’s the social impact?</b><p>Students from tier-2 and tier-3 colleges without mentors get a free, honest picture of where they stand and what to do this week, in any engineering branch, with no login or payment.</p></div>
+
+<h2>8 · Tough or tricky questions</h2>
+<div class="q"><b class="qq">This looks like a nice frontend. Where’s the innovation?</b><p>The innovation is the link between evidence and plan. A scoped, honest verdict feeds an explainable priority formula, gap × weight, that turns a 12-question test into a schedule in hours and weeks. Open the report and the planner to show it.</p></div>
+<div class="q"><b class="qq">Your data is synthetic. Isn’t the whole plan meaningless then?</b><p>The engine is real and tested. Only the input weights are samples. Swap in real postings and the same formula gives real priorities. We chose to be transparent about that rather than present made-up data as real.</p></div>
+<div class="q"><b class="qq">What’s the biggest weakness of your project right now?</b><p>Have a real answer ready, for example: “The questions haven’t had expert review, and the job weights are samples. Both are the first items on our roadmap.” Judges trust teams that know their limits.</p></div>
+<div class="q"><b class="qq">What if your live demo breaks?</b><p>It runs with no server, so a local copy on the laptop works without Wi-Fi. Keep one ready, and keep the PDF deck as a backup.</p></div>
+<div class="q"><b class="qq">What did each team member do?</b><p><span class="tag">Fill in</span> Agree beforehand on one sentence per person, for example: engine and scoring, question bank, UI and 3D, career-path content, testing. Every member should be able to answer a question about their own part.</p></div>
+</body></html>

@@ -1,0 +1,73 @@
+// Swift question bank (Swift 5.9+). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'swift',
+  label: 'Swift',
+  roadmap: 'swift-ui',
+  topics: [
+    { key: 'basics', label: 'Syntax & types', keywords: ['introduction', 'constants--variables', 'integers', 'basic-functions'] },
+    { key: 'optionals', label: 'Optionals', keywords: ['optional', 'constants--variables'] },
+    { key: 'collections', label: 'Collections & closures', keywords: ['closures', 'collection', 'loops'] },
+    { key: 'control', label: 'Control flow', keywords: ['if--else', 'loops', 'continue--break'] },
+    { key: 'types', label: 'Structs, classes & enums', keywords: ['enumerations', 'inheritance', 'initialization', 'computed', 'methods'] },
+    { key: 'protocols', label: 'Protocols & generics', keywords: ['generics', 'extensions', 'protocol'] },
+    { key: 'errors', label: 'Errors & memory', keywords: ['error-handling', 'catching', 'arc', 'memory-safety'] },
+    { key: 'concurrency', label: 'Concurrency', keywords: ['actors', 'asynchronous-functions', 'asynchronous-sequences'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What happens here?', 'let x = 5\nx = 6', ['A compile error: cannot assign to a let constant', 'x becomes 6', 'A runtime crash', 'A warning only'], 'let declares a constant. Use var for variables.'],
+  ['basics', 'What is s afterwards?', 'var s = "Hi"\ns += "!"', ['"Hi!"', '"Hi"', 'A compile error', '"!Hi"'], '+= appends to a var string.'],
+  ['basics', 'Which line prints “Hi Ann”?', null, ['print("Hi \\(name)")', 'print("Hi $name")', 'print("Hi {name}")', 'print("Hi " + $name)'], 'Swift interpolates with \\( ).'],
+  ['optionals', 'Is this valid?', 'var n: Int? = nil', ['Yes — Int? is an optional Int', 'No — Int cannot be nil', 'Only inside a class', 'Only with try'], 'Optionals explicitly allow a missing value.'],
+  ['collections', 'What does [1, 2, 3].count return?', null, ['3', '2', '4', 'It does not compile'], 'count is a property on arrays.'],
+  ['control', 'What is printed?', 'for i in 1...3 { print(i, terminator: "") }', ['123', '12', '0123', '23'], '... is the closed range operator.'],
+  ['control', 'What is printed?', 'for i in 1..<3 { print(i, terminator: "") }', ['12', '123', '23', '012'], '..< excludes the upper bound.'],
+  ['basics', 'How do you call func greet(name: String) -> String?', null, ['greet(name: "Ann")', 'greet("Ann")', 'greet(String: "Ann")', 'greet->("Ann")'], 'Argument labels are part of the call by default.'],
+  ['collections', 'What does ["a": 1]["b"] return?', null, ['nil', '0', 'A crash', 'A compile error'], 'Dictionary lookups return an optional.'],
+  ['optionals', 'What does if let n = maybeNumber { … } do?', null, ['Runs the block with an unwrapped n only if maybeNumber is not nil', 'Crashes on nil', 'Assigns nil to n', 'Loops while not nil'], 'Optional binding safely unwraps.'],
+  ['basics', 'What is 7 / 2 with Int operands?', null, ['3', '3.5', '4', 'A compile error'], 'Integer division truncates.'],
+  ['types', 'Which statement is true?', null, ['Structs are value types; classes are reference types', 'Both are reference types', 'Classes are copied on assignment', 'Structs cannot have methods'], 'Swift prefers structs for most model data.'],
+  ['types', 'A switch on an enum omits a case and has no default. What happens?', null, ['A compile error: switch must be exhaustive', 'The case is ignored', 'A runtime crash', 'A warning only'], 'Swift checks switch exhaustiveness.'],
+  ['basics', 'What is the name of Swift’s boolean type?', null, ['Bool', 'Boolean', 'bool', 'Bit'], 'Its values are true and false.'],
+  ['basics', 'What does print(type(of: 3.0)) print?', null, ['Double', 'Float', 'Decimal', 'Number'], 'Floating-point literals default to Double.'],
+  ['optionals', 'What is the value of this expression?', 'let n: Int? = nil\nn ?? 0', ['0', 'nil', 'A crash', 'A compile error'], '?? supplies a default for nil.'],
+];
+
+export const medium = [
+  ['types', 'What is a.x?', 'struct P { var x: Int }\nvar a = P(x: 1)\nvar b = a\nb.x = 2', ['1', '2', 'A compile error', '0'], 'Assigning a struct copies it.'],
+  ['types', 'What is a.x?', 'class P { var x: Int; init(x: Int) { self.x = x } }\nlet a = P(x: 1)\nlet b = a\nb.x = 2', ['2', '1', 'A compile error because a is let', '0'], 'Class instances are shared references. let fixes the reference, not the object’s properties.'],
+  ['optionals', 'What happens when you force-unwrap nil with value!?', null, ['A runtime crash', 'It returns nil', 'It returns 0', 'A compile error'], 'Prefer if let, guard let or ??.'],
+  ['optionals', 'What is guard let typically used for?', 'guard let user = user else { return }', ['Unwrapping early and exiting the scope when nil', 'Looping', 'Catching errors', 'Declaring a constant that can be nil'], 'After the guard, user is non-optional for the rest of the scope.'],
+  ['optionals', 'What is user?.address?.city when address is nil?', null, ['nil', 'A crash', '""', 'A compile error'], 'Optional chaining stops at the first nil.'],
+  ['collections', 'What does this return?', '[3, 1, 2].sorted { $0 < $1 }', ['[1, 2, 3]', '[3, 2, 1]', '[3, 1, 2]', 'A compile error'], '$0 and $1 are shorthand closure arguments.'],
+  ['collections', 'What does this return?', '[1, 2, 3, 4].filter { $0 % 2 == 0 }.map { $0 * 10 }', ['[20, 40]', '[10, 30]', '[10, 20, 30, 40]', '[2, 4]'], 'filter keeps the evens; map multiplies.'],
+  ['types', 'Why is mutating needed here?', 'struct C {\n    var n = 0\n    mutating func inc() { n += 1 }\n}', ['Struct methods that change properties must be marked mutating', 'It makes the method async', 'It is optional style', 'For classes only'], 'Value-type methods are non-mutating by default.'],
+  ['types', 'What does case success(Int) inside an enum declare?', null, ['A case with an associated Int value', 'A raw value of type Int', 'A static property', 'A function'], 'Associated values travel with each case instance.'],
+  ['protocols', 'What does a protocol extension let you do?', null, ['Provide default implementations for protocol requirements', 'Store properties in protocols', 'Inherit from classes', 'Nothing'], 'This is a core part of protocol-oriented programming.'],
+  ['errors', 'How do you call a function marked throws?', null, ['With try, usually inside do { } catch { }', 'Normally', 'With await', 'With !'], 'Callers must acknowledge the possible error.'],
+  ['errors', 'What does try? do?', null, ['Converts a thrown error into nil', 'Crashes on error', 'Retries the call', 'Ignores the return value'], 'try! crashes on error instead.'],
+  ['collections', 'What happens?', 'let a = [1, 2]\na.append(3)', ['A compile error: a is a let constant', 'a becomes [1, 2, 3]', 'A runtime crash', 'A warning'], 'let arrays are immutable.'],
+  ['control', 'How does switch differ from C here?', null, ['Cases do not fall through implicitly', 'It requires break', 'It only works on Int', 'It cannot match ranges'], 'Use the fallthrough keyword when you really want it.'],
+  ['types', 'What is var area: Double { width * height }?', null, ['A computed property', 'A stored property', 'A closure variable', 'A lazy property'], 'It is recalculated on every access.'],
+  ['types', 'How do you call func double(_ x: inout Int) on var n?', null, ['double(&n)', 'double(n)', 'double(*n)', 'double(ref n)'], 'inout parameters are written back to the caller.'],
+];
+
+export const hard = [
+  ['errors', 'A class stores a closure that uses self. How do you avoid a retain cycle?', null, ['Capture self weakly: { [weak self] in … }', 'Use a struct', 'Call deinit', 'It cannot cycle'], 'Strong self capture plus the stored closure keeps both alive.'],
+  ['errors', 'How must a weak reference be declared?', null, ['As an optional var', 'As a let', 'As non-optional', 'Inside a struct only'], 'It becomes nil when the object is deallocated.'],
+  ['collections', 'When must a closure parameter be marked @escaping?', null, ['When it is stored or called after the function returns', 'Always', 'When it throws', 'When it captures self'], 'Non-escaping closures are the default and can be optimised.'],
+  ['collections', 'How do Swift arrays behave when copied?', null, ['They share storage until one copy is mutated (copy-on-write)', 'They are copied element by element immediately', 'They are references', 'They cannot be copied'], 'Copy-on-write makes value semantics cheap.'],
+  ['concurrency', 'What does await mark?', null, ['A potential suspension point where the task may pause', 'A blocking call', 'A new thread', 'An error point'], 'Other work can run while the task is suspended.'],
+  ['concurrency', 'What do actors guarantee?', null, ['Only one task at a time accesses their mutable state', 'Faster execution', 'Main-thread execution', 'Nothing at runtime'], 'Access from outside the actor must be awaited.'],
+  ['protocols', 'How do some View and any View differ?', null, ['some is an opaque concrete type chosen by the implementation; any is a boxed existential that can hold any conforming type', 'They are identical', 'any is faster', 'some requires classes'], 'some keeps static type information.'],
+  ['errors', 'What is printed?', 'func f() {\n    defer { print(1, terminator: "") }\n    defer { print(2, terminator: "") }\n}\nf()', ['21', '12', '1', 'Nothing'], 'defer blocks run when the scope exits, in reverse order.'],
+  ['types', 'When is a lazy var initialised?', null, ['On first access', 'At init', 'Never automatically', 'On every access'], 'Useful for expensive values that may not be needed.'],
+  ['protocols', 'When can a struct get Equatable conformance without writing ==?', null, ['When all its stored properties are Equatable', 'Always', 'Never', 'Only for classes'], 'The compiler synthesises it.'],
+  ['basics', 'What does Int8(127) + 1 do at runtime?', null, ['Traps (crashes) on overflow; &+ wraps instead', 'Wraps to -128', 'Saturates at 127', 'Becomes 128'], 'Swift checks arithmetic overflow by default.'],
+  ['errors', 'How does unowned differ from weak?', null, ['unowned is non-optional and crashes if accessed after deallocation', 'unowned keeps the object alive', 'They are the same', 'unowned only works for structs'], 'Use unowned only when the referenced object always outlives the reference.'],
+  ['concurrency', 'What is @MainActor for?', null, ['Running code on the main thread, for example UI updates', 'Making code faster', 'Creating threads', 'Marking deprecated APIs'], 'UIKit and SwiftUI state must be updated on the main actor.'],
+  ['errors', 'What are the cases of Result<Success, Failure>?', null, ['.success and .failure', '.ok and .err', '.some and .none', '.value and .error'], 'Result is useful for callbacks and stored outcomes.'],
+  ['protocols', 'Which protocol must a type conform to before it can go in a Set or be a dictionary key?', null, ['Hashable', 'Comparable', 'Codable', 'Identifiable'], 'Hashable refines Equatable.'],
+  ['types', 'What does a failable initialiser init? return when it fails?', null, ['nil', 'An error', 'A default instance', 'It crashes'], 'Callers get an optional instance.'],
+];

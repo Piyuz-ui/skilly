@@ -1,0 +1,73 @@
+// TypeScript question bank (TS 5.x, "strict": true unless stated). Row format documented in python.js. Append only.
+export const meta = {
+  id: 'typescript',
+  label: 'TypeScript',
+  roadmap: 'typescript',
+  topics: [
+    { key: 'basics', label: 'Types & inference', keywords: ['primitive', 'type-inference', 'any', 'unknown', 'never', 'void', 'enum', 'tuple', 'literal'] },
+    { key: 'objects', label: 'Interfaces & object types', keywords: ['interface', 'type-alias', 'object', 'readonly'] },
+    { key: 'functions', label: 'Typed functions', keywords: ['function', 'overload'] },
+    { key: 'narrowing', label: 'Unions & narrowing', keywords: ['union', 'narrowing', 'type-guard', 'typeof', 'instanceof', 'discriminat', 'assertion'] },
+    { key: 'generics', label: 'Generics', keywords: ['generic', 'constraint'] },
+    { key: 'utility', label: 'Utility & mapped types', keywords: ['utility', 'partial', 'pick', 'omit', 'record', 'mapped', 'keyof', 'indexed'] },
+    { key: 'advanced', label: 'Conditional & template types', keywords: ['conditional', 'template-literal', 'advanced-types', 'infer'] },
+    { key: 'tooling', label: 'Compiler & config', keywords: ['tsconfig', 'compiler', 'tsc', 'strict'] },
+  ],
+};
+
+export const easy = [
+  ['basics', 'What happens with this line?', 'let n: number = "5";', ['A compile-time type error', 'n becomes 5', 'n becomes "5"', 'A runtime exception'], 'A string is not assignable to number.'],
+  ['basics', 'How do you annotate an array of strings?', null, ['string[]', 'Array(string)', '[string]', 'strings'], 'string[] and Array<string> are equivalent. [string] is a one-element tuple.'],
+  ['objects', 'What does the ? mean in age?: number?', null, ['The property is optional and may be undefined', 'The property is nullable only', 'The property is private', 'It is a ternary'], 'Optional properties have type number | undefined when read.'],
+  ['narrowing', 'Is this valid?', 'let id: string | number;\nid = 5;\nid = "x5";', ['Yes — both are members of the union', 'Only id = 5 is valid', 'Only the string is valid', 'Unions need a type guard to assign'], 'A union accepts a value of any of its members.'],
+  ['functions', 'Which signature annotates the parameters and the return type?', null, ['function add(a: number, b: number): number', 'function add(number a, number b): number', 'function add(a, b) -> number', 'number function add(a, b)'], 'Annotations follow names with a colon. The return type goes after the parameter list.'],
+  ['tooling', 'What does tsc do?', null, ['It type-checks TypeScript and emits JavaScript', 'It runs TypeScript directly in the browser', 'It minifies CSS', 'It installs types'], 'Browsers and Node run the emitted JavaScript. Types are erased.'],
+  ['basics', 'What does the any type do?', null, ['It turns off type checking for that value', 'It accepts only objects', 'It is the same as unknown', 'It rejects null'], 'any opts out of checking. Prefer unknown when the type is truly unknown.'],
+  ['objects', 'What happens on the last line?', 'interface P { readonly id: number }\nconst p: P = { id: 1 };\np.id = 2;', ['A compile error: id is read-only', 'p.id becomes 2', 'A runtime TypeError', 'Nothing'], 'readonly is enforced by the compiler.'],
+  ['basics', 'What is Color.Green?', 'enum Color { Red, Green, Blue }', ['1', '0', '"Green"', '2'], 'Numeric enums start at 0 and increment.'],
+  ['basics', 'What happens?', 'let x = 10;\nx = "a";', ['Compile error — x was inferred as number', 'x becomes "a"', 'x becomes NaN', 'x is widened to any'], 'TypeScript infers the type from the initialiser.'],
+  ['objects', 'Which is true about interface and type for describing object shapes?', null, ['Both can describe object shapes', 'Only interface can describe objects', 'type cannot be extended at all', 'interface can describe unions'], 'They overlap a lot. Interfaces support declaration merging. Type aliases can express unions.'],
+  ['basics', 'Which assignment fits the type [string, number]?', null, ['["a", 1]', '[1, "a"]', '["a", "b"]', '{ 0: "a", 1: 1, length: 3 }'], 'A tuple fixes the length and the type at each position.'],
+  ['functions', 'What does a void return type mean?', null, ['The function does not return a useful value', 'It returns null', 'It never returns', 'It returns undefined, which you must check'], 'never is the type for functions that never return.'],
+  ['generics', 'What is the return type of id<string>("a")?', 'function id<T>(x: T): T { return x; }', ['string', 'any', 'unknown', 'T'], 'An explicit type argument sets T = string, so the return type is string.'],
+  ['narrowing', 'What happens?', 'let dir: "up" | "down" = "left";', ['A compile error', 'dir becomes "left"', 'dir becomes "up"', 'A runtime error'], 'Literal union types allow only the listed values.'],
+  ['narrowing', 'Which is the modern type assertion syntax?', null, ['value as string', '(string)value', 'value: string', 'cast<string>(value)'], '<string>value also works outside .tsx files, but `as` is preferred.'],
+];
+
+export const medium = [
+  ['narrowing', 'What is the type of x inside the if block?', 'function f(x: string | number) {\n  if (typeof x === "string") {\n    // here\n  }\n}', ['string', 'string | number', 'number', 'unknown'], 'typeof guards narrow union types.'],
+  ['basics', 'How does unknown differ from any?', null, ['You must narrow unknown before using it', 'unknown allows any operation', 'They are aliases', 'unknown only holds objects'], 'unknown is the type-safe top type.'],
+  ['tooling', 'With strictNullChecks on, what does let s: string = null; do?', null, ['It is a compile error', 'It compiles', 'It throws at runtime', 's becomes ""'], 'null must be included explicitly: string | null.'],
+  ['utility', 'What does Partial<User> do?', null, ['It makes every property of User optional', 'It removes all properties', 'It makes them readonly', 'It picks the first property'], 'Partial maps each property to optional.'],
+  ['utility', 'What is K?', 'type K = keyof { a: 1; b: 2 };', ['"a" | "b"', '1 | 2', 'string', '["a", "b"]'], 'keyof produces a union of property names.'],
+  ['narrowing', 'Inside the switch, why is s.radius available in the "circle" case?', 'type Shape =\n  | { kind: "circle"; radius: number }\n  | { kind: "square"; size: number };\n\nfunction area(s: Shape) {\n  switch (s.kind) {\n    case "circle": return Math.PI * s.radius ** 2;\n  }\n}', ['The kind discriminant narrows s to the circle member', 'radius exists on every Shape', 'Because of any', 'It is not — it is an error'], 'Discriminated unions narrow on a shared literal property.'],
+  ['objects', 'What happens?', 'const p: { x: number } = { x: 1, y: 2 };', ['A compile error: object literal may only specify known properties', 'It compiles; y is ignored', 'p.y is 2', 'A runtime error'], 'An object literal assigned directly to a typed target goes through an excess property check.'],
+  ['generics', 'What happens with len(5)?', 'function len<T extends { length: number }>(x: T) { return x.length; }', ['A compile error — number has no length', 'Returns undefined', 'Returns 1', 'Returns 5'], 'The constraint requires a length property.'],
+  ['narrowing', 'Shape gains a "triangle" member. What happens in this default branch?', 'default:\n  const _exhaustive: never = s;', ['A compile error flags the unhandled case', 'Triangle is silently ignored', 'A runtime error is thrown', 'never becomes triangle'], 'Assigning a remaining non-never type to never fails, which makes the switch exhaustive.'],
+  ['utility', 'What does Pick<User, "id" | "name"> produce?', null, ['A type with only id and name from User', 'User without id and name', 'A union of id and name values', 'An array of keys'], 'Omit is the inverse.'],
+  ['tooling', 'Why does x instanceof MyInterface fail to compile?', null, ['Interfaces exist only at compile time — there is no runtime value', 'instanceof is banned in TS', 'It needs as const', 'Interfaces need new'], 'Types are erased. Use a type guard or a class instead.'],
+  ['utility', 'Which type describes an object with arbitrary string keys and number values?', null, ['Record<string, number>', 'Map<number>', 'object<number>', 'number[]'], 'Record<K, V> builds an object type with keys K and values V.'],
+  ['objects', 'What happens?', 'const a: readonly number[] = [1];\na.push(2);', ['A compile error: push does not exist on readonly number[]', 'a becomes [1, 2]', 'A runtime TypeError', 'It works with a warning'], 'Readonly arrays drop mutating methods.'],
+  ['basics', 'What is the type of c?', 'const c = ["a", "b"] as const;', ['readonly ["a", "b"]', 'string[]', '("a" | "b")[]', 'readonly string[]'], 'as const infers the narrowest literal, readonly tuple type.'],
+  ['narrowing', 'What does the non-null assertion in el!.focus() do at runtime?', null, ['Nothing — it is erased; it only changes the compile-time type', 'Throws if el is null', 'Skips the call if el is null', 'Converts el to a boolean'], 'If el is actually null you will get a runtime TypeError.'],
+  ['objects', 'Does this compile?', 'class A { x = 1; }\nclass B { x = 2; }\nconst a: A = new B();', ['Yes — TypeScript is structurally typed', 'No — the classes differ', 'Only with a cast', 'Only if B extends A'], 'Compatibility depends on shape, not name. Private or protected members would change this.'],
+];
+
+export const hard = [
+  ['advanced', 'What is R?', 'type ToArr<T> = T extends any ? T[] : never;\ntype R = ToArr<string | number>;', ['string[] | number[]', '(string | number)[]', 'never', 'any[]'], 'Conditional types distribute over naked type parameters in unions.'],
+  ['advanced', 'What is R?', 'type ToArr<T> = [T] extends [any] ? T[] : never;\ntype R = ToArr<string | number>;', ['(string | number)[]', 'string[] | number[]', 'never', '[string | number]'], 'Wrapping T in a tuple stops distribution.'],
+  ['advanced', 'What does infer do here?', 'type Ret<T> = T extends (...a: any[]) => infer R ? R : never;', ['It captures the function’s return type as R', 'It infers argument types', 'It always yields any', 'It is a runtime keyword'], 'This is how the built-in ReturnType<T> is defined.'],
+  ['objects', 'What is the main benefit of `const cfg = {...} satisfies Config`?', null, ['It checks against Config while keeping the narrower inferred type', 'It casts to Config unsafely', 'It makes cfg readonly', 'It validates at runtime'], 'Unlike an annotation, satisfies does not widen the expression’s type.'],
+  ['utility', 'What does this mapped type do?', 'type M<T> = { -readonly [K in keyof T]-?: T[K] };', ['Removes readonly and optional modifiers from every property', 'Adds readonly and optional', 'Makes all properties never', 'Removes all properties'], 'Prefixing a modifier with - removes it.'],
+  ['advanced', 'What is E?', 'type E = `on${Capitalize<"click">}`;', ['"onClick"', '"onclick"', 'string', '"on${Click}"'], 'Template literal types combine with intrinsic string types.'],
+  ['functions', 'Under strictFunctionTypes, which parameters are checked contravariantly?', null, ['Properties typed as function types, not method-shorthand members', 'Method-shorthand members only', 'All of them', 'None'], 'Method shorthand stays bivariant so common patterns such as Array<T> keep working.'],
+  ['narrowing', 'What does the return type of isStr do?', 'function isStr(x: unknown): x is string {\n  return typeof x === "string";\n}', ['It lets callers narrow x to string when the result is true', 'It converts x to a string', 'It is just a boolean annotation', 'It throws when false'], 'This is a user-defined type guard (type predicate).'],
+  ['tooling', 'With noUncheckedIndexedAccess enabled, what type does arr[0] have for arr: number[]?', null, ['number | undefined', 'number', 'unknown', 'never'], 'This flag adds undefined to index reads to reflect possible out-of-range access.'],
+  ['objects', 'Why does this compile?', 'const extra = { x: 1, y: 2 };\nconst p: { x: number } = extra;', ['Excess property checks apply only to fresh object literals', 'y is optional', 'p is any', 'It does not compile'], 'Assigning through a variable uses ordinary structural compatibility.'],
+  ['basics', 'Which value is NOT assignable to type {}?', null, ['null', '"text"', '42', '{ a: 1 }'], '{} means “any non-nullish value”, primitives included. object excludes primitives.'],
+  ['functions', 'A function has two overload signatures plus an implementation signature. Which is true?', null, ['Callers can only use the overload signatures; the implementation signature is hidden', 'Callers can call the implementation signature too', 'The last overload always wins', 'Overloads are checked at runtime'], 'Overloads are matched top-down. Put more specific ones first.'],
+  ['basics', 'What does Color[0] return?', 'enum Color { Red, Green }', ['"Red"', '0', 'undefined', 'A compile error'], 'Numeric enums emit a reverse mapping. String enums and const enums do not.'],
+  ['narrowing', 'What does an assertion function with return type `asserts x is string` do?', null, ['After the call returns, x is narrowed to string; the function is expected to throw otherwise', 'It returns a boolean guard', 'It casts silently with no runtime code', 'It is only valid in tests'], 'It narrows for the code that follows the call.'],
+  ['generics', 'Does this compile?', 'const s: string[] = ["a"];\nconst u: (string | number)[] = s;\nu.push(1);', ['Yes — arrays are treated covariantly, which is unsound here', 'No — arrays are invariant', 'It compiles, then throws at runtime', 'Only with as const'], 's now contains a number at runtime even though its type says string[].'],
+  ['utility', 'What is keyof (A | B) when A = { a: 1; c: 1 } and B = { b: 1; c: 1 }?', null, ['"c"', '"a" | "b" | "c"', 'never', '"a" | "b"'], 'Only keys common to every union member are safe to access.'],
+];

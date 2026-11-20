@@ -15,6 +15,12 @@ import { Plan } from './components/Plan.jsx';
 import { JellyLogo } from './components/JellyLogo.jsx';
 import { PathsIndex, PathViewer } from './components/Paths.jsx';
 import { BeginnerPick } from './components/BeginnerPick.jsx';
+import { Account, Avatar } from './components/Account.jsx';
+import { useAccount, resumeIfSignedIn } from './lib/account.js';
+import { accountsEnabled } from './lib/firebase.js';
+
+// Reconnect to the account on load, but only if someone signed in here before.
+resumeIfSignedIn();
 
 function Header({ route }) {
   const attempt = useStore((s) => s.attempt);
@@ -22,6 +28,8 @@ function Header({ route }) {
   const lastReport = useStore((s) => s.reports.at(-1));
   const confirm = useConfirm();
   const onTest = route === 'test';
+  const acct = useAccount();
+  const signedIn = acct.status === 'signedIn';
 
   const changePath = async () => {
     if (attempt) {
@@ -46,6 +54,14 @@ function Header({ route }) {
           <li><button type="button" className="nav-link" onClick={changePath}><span className="nav-long">Change path</span><span className="nav-short" aria-hidden="true">Switch</span></button></li>
            {lastReport && !onTest && <li className="nav-hide-sm"><a className="nav-link" href={`#/report/${lastReport.id}`}>Last report</a></li>}
           {hasPlan && !onTest && <li><a className="nav-link" href="#/plan"><span className="nav-long">My </span>roadmap</a></li>}
+          {accountsEnabled && !onTest && (
+            <li>
+              <a className={`nav-link account-link${route === 'account' ? ' on' : ''}`} href="#/account" aria-label={signedIn ? `Your account (${acct.user.name || 'profile'})` : 'Sign in'}>
+                <Avatar user={signedIn ? acct.user : null} size={30} />
+                {!signedIn && <span className="nav-long">Sign in</span>}
+              </a>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
@@ -66,6 +82,7 @@ function Routes() {
     case 'report': el = <Report id={parts[1]} />; break;
     case 'plan': el = <Plan />; break;
     case 'beginner': el = <BeginnerPick />; break;
+    case 'account': el = <Account />; break;
     case 'paths': el = parts[1] ? <PathViewer key={parts[1]} id={parts[1]} /> : <PathsIndex />; break;
     default: el = <Home />;
   }

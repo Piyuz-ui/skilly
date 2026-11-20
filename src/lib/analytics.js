@@ -14,6 +14,7 @@ export const EVENTS = {
   beginnerPlan: 'Started a beginner plan', // beginner-plan-<language>
   demoLearner: 'Loaded the demo learner',
   feedback: 'Sent feedback',
+  account: 'Created an account / signed in', // account-created-email, sign-in-google / -email / -phone
 };
 
 const isLocal = () => /^(localhost|127\.0\.0\.1|\[::1\]|.*\.local)$/.test(location.hostname);

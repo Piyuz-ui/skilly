@@ -47,6 +47,19 @@ npm test
 
 `netlify.toml` holds the Netlify settings. With the GitHub repo connected to Netlify, every push to `main` runs `npm test`, builds the site and publishes `dist/`. If a check fails, the deploy stops and the live site stays on the last good version.
 
+## Accounts
+
+People can create an account or sign in with **email and password**, **Google**, or a **phone number and SMS code** (Firebase Authentication). Their progress syncs to their account and follows them to any device: reports, roadmaps, ticked tasks, quiz results and career paths. Progress made as a guest is added to the account on first sign-in. The profile page (`#/account`) shows their stats and lets them sign out or delete the account.
+
+Accounts stay hidden until the Firebase keys are set. See **[SETUP-ACCOUNTS.md](SETUP-ACCOUNTS.md)** for the 15-minute setup and for local testing with the emulators.
+
+- Code:
+  - `src/lib/account.js`: sign-in and syncing;
+  - `src/lib/sync.js`: the merge rules;
+  - `src/components/Account.jsx`: the account page.
+- Security: `firestore.rules` lets each person read and write only their own data.
+- Tests: `npm test` includes 18 sync checks (`scripts/test-sync.mjs`).
+
 ## Feedback and analytics
 
 - **Feedback:** the floating *Feedback* button (hidden during tests) and the footer's *Send feedback* link open a short form: a 1–5 rating, a message and an optional email. It posts to **Netlify Forms** through the hidden `<form name="feedback">` in `index.html`. Submissions appear under **Forms** in the Netlify dashboard. On localhost, nothing is sent and the form shows a preview message instead.

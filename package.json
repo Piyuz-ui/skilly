@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "catalog": "node scripts/build-catalog.mjs",
     "check:questions": "node scripts/check-questions.mjs",
-    "test": "node scripts/check-questions.mjs && node scripts/test-logic.mjs",
-    "pdfs": "python3 presentation/build_pdfs.py"
+    "test": "node scripts/check-questions.mjs && node scripts/test-logic.mjs && node scripts/test-sync.mjs",
+    "pdfs": "python3 presentation/build_pdfs.py",
+    "emulators": "npx -y firebase-tools@15.35.0 emulators:start --project demo-skilly"
   },
   "dependencies": {
+    "firebase": "13.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0"

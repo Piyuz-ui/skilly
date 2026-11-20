@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Each person can read and write only their own progress document,
+// users/{their uid}. Everything else is closed.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['schema', 'data', 'deviceId', 'updatedAt'])
+        && request.resource.data.schema is int
+        && request.resource.data.data is string
+        && request.resource.data.data.size() < 900000
+        && request.resource.data.deviceId is string
+        && request.resource.data.deviceId.size() < 64
+        && request.resource.data.updatedAt == request.time;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

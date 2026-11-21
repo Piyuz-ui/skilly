@@ -635,7 +635,8 @@ img, video, canvas { max-width: 100%; }
 .footer-sub { margin-top: 22px; }
 .fb-fab {
   position: fixed; z-index: 40;
-  right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom));
+  /* Bottom-left: Netlify puts its "Powered by Netlify" badge in the bottom-right corner. */
+  left: max(16px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom));
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
   border-radius: 999px; border: 1px solid var(--edge); cursor: pointer;
   font: 600 0.92rem var(--font); color: var(--text);

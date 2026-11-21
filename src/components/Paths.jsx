@@ -2,7 +2,8 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PATHS, PATH_BY_ID, SKILLS, CATEGORIES } from '../data/paths.js';
 import { LANGUAGE_BY_ID } from '../data/questions/index.js';
 import { useStore } from '../lib/store.js';
-import { toggleStepDone, setRating, setHours, loadDemo, testLanguage } from '../lib/actions.js';
+import { toggleStepDone, toggleWeekDone, setRating, setHours, loadDemo, testLanguage } from '../lib/actions.js';
+import { loadNotes, weekNumbers } from '../data/notes/index.js';
 import { buildRows, readiness, buildSchedule } from '../lib/gap.js';
 import { navigate, useReducedMotion } from '../lib/hooks.js';
 
@@ -147,14 +148,20 @@ function NodeMap({ path, sel, onSelect, done }) {
 // ─── Step detail ───────────────────────────────────────────────────────────
 const KIND_ORDER = ['Free course', 'Interactive', 'Official docs', 'Book', 'Video', 'Roadmap'];
 
-function StepPanel({ path, step, index, isDone }) {
+function StepPanel({ path, step, index, isDone, tab, onTab, notes, firstWeek, weeksDone }) {
   const [testLang, setTestLang] = useState(step.lang);
   const groups = KIND_ORDER.map((k) => [k, step.resources.filter((r) => r.kind === k)]).filter(([, rs]) => rs.length);
   const startTest = () => { testLanguage(testLang); navigate('/setup'); };
+  const weekCount = notes?.w?.length || 0;
   return (
     <section className="slab panel step-panel" id="step-panel" role="tabpanel" aria-labelledby={`node-${step.id}`} key={step.id}>
-      <p className="step">{step.capstone ? 'Finale' : `Step ${index + 1} of ${path.steps.length}`}{step.skill ? ` · ${SKILLS[step.skill].name}` : ''}</p>
+      <p className="step">{step.capstone ? 'Finale' : `Step ${index + 1} of ${path.steps.length}`}{step.skill ? ` · ${SKILLS[step.skill].name}` : ''}{weekCount ? ` · Weeks ${firstWeek}–${firstWeek + weekCount - 1}` : ''}</p>
       <h2>{step.title}</h2>
+      <div className="step-tabs" role="tablist" aria-label={`${step.title} sections`}>
+        <button type="button" role="tab" aria-selected={tab === 'overview'} className={tab === 'overview' ? 'on' : ''} onClick={() => onTab('overview')}>Overview</button>
+        <button type="button" role="tab" aria-selected={tab === 'notes'} className={tab === 'notes' ? 'on' : ''} onClick={() => onTab('notes')}>📒 Study notes{weekCount ? ` · ${weekCount} weeks` : ''}</button>
+      </div>
+      {tab === 'notes' ? <NotesView path={path} step={step} notes={notes} firstWeek={firstWeek} weeksDone={weeksDone} /> : (<>
       <p className="overview">{step.overview}</p>
       <ul className="chip-list" role="list" aria-label="What you’ll learn">
         {step.chips.map((c) => <li key={c} className="chip static skill-chip">{c}</li>)}
@@ -175,6 +182,7 @@ function StepPanel({ path, step, index, isDone }) {
         <h3>🛠 Mini-project</h3>
         <p>{step.project}</p>
       </div>
+      </>)}
       <div className="row">
         <button type="button" className={`btn ${isDone ? 'ghost' : 'primary'}`} onClick={() => toggleStepDone(path.id, step.id)} aria-pressed={!!isDone}>
           {isDone ? '✓ Completed — undo' : 'Mark step complete'}
@@ -193,6 +201,96 @@ function StepPanel({ path, step, index, isDone }) {
           </span>
         )}
       </div>
+    </section>
+  );
+}
+
+// ─── Study notes ───────────────────────────────────────────────────────────
+function NotesView({ path, step, notes, firstWeek, weeksDone }) {
+  if (notes === undefined) return <p className="muted notes-loading">Loading notes…</p>;
+  if (!notes) return <p className="muted">Notes for this step are coming soon.</p>;
+  return (
+    <div className="notes">
+      {notes.w.map(([title, learn, build], i) => {
+        const key = `${step.id}:${i}`;
+        const done = !!weeksDone[key];
+        return (
+          <article key={key} className={`week-note${done ? ' done' : ''}`}>
+            <header className="wn-head">
+              <span className="wn-num">Week {firstWeek + i}</span>
+              <h3>{title}</h3>
+              <label className="wn-check">
+                <input type="checkbox" checked={done} onChange={() => toggleWeekDone(path.id, key)} />
+                <span>{done ? 'Done' : 'Mark done'}</span>
+              </label>
+            </header>
+            <div className="wn-cols">
+              <div><h4>Learn</h4><ul>{learn.map((x) => <li key={x}>{x}</li>)}</ul></div>
+              <div><h4>Build &amp; practise</h4><ul className="wn-do">{build.map((x) => <li key={x}>{x}</li>)}</ul></div>
+            </div>
+          </article>
+        );
+      })}
+      <section className="note-block">
+        <h3>🔑 Key concepts</h3>
+        <dl className="concepts">{notes.k.map(([t, d]) => <div key={t}><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
+      </section>
+      <div className="note-pair">
+        <section className="note-block">
+          <h3>⚠️ Common mistakes</h3>
+          <ul>{notes.m.map((x) => <li key={x}>{x}</li>)}</ul>
+        </section>
+        <section className="note-block">
+          <h3>✅ Check yourself</h3>
+          <ol>{notes.q.map((x) => <li key={x}>{x}</li>)}</ol>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function WeekPlan({ path, notes, weeks, weeksDone, onOpen }) {
+  if (!notes) return null;
+  const doneCount = Object.keys(weeksDone).filter((k) => weeksDone[k] && path.steps.some((s) => k.startsWith(`${s.id}:`))).length;
+  return (
+    <section className="slab panel week-plan" aria-labelledby="week-plan-h">
+      <div className="wp-head">
+        <div>
+          <p className="step">Study plan</p>
+          <h2 id="week-plan-h">Week by week: {weeks.total} weeks</h2>
+          <p className="muted small">About 6–8 hours a week. Tick a week when you’ve done its learning and practice. Your ticks are saved{' '}(and synced if you’re signed in).</p>
+        </div>
+        <div className="path-progress" aria-label={`${doneCount} of ${weeks.total} weeks done`}>
+          <b>{doneCount}/{weeks.total}</b><span>weeks done</span>
+          <span className="pc-bar"><span style={{ width: `${weeks.total ? (doneCount / weeks.total) * 100 : 0}%` }} /></span>
+        </div>
+      </div>
+      <ol className="wp-steps">
+        {path.steps.map((st, si) => (
+          <li key={st.id} className="wp-step">
+            <h3><span className="wp-stepnum">{si + 1}</span>{st.title}</h3>
+            <ul className="wp-weeks">
+              {(notes[st.id]?.w || []).map(([title], i) => {
+                const key = `${st.id}:${i}`;
+                const done = !!weeksDone[key];
+                return (
+                  <li key={key} className={done ? 'done' : ''}>
+                    <label className="wp-tick">
+                      <input type="checkbox" checked={done} onChange={() => toggleWeekDone(path.id, key)} />
+                      <span className="sr-only">Week {weeks.start[st.id] + i} done</span>
+                    </label>
+                    <button type="button" className="wp-open" onClick={() => onOpen(si)}>
+                      <span className="wp-wk">Week {weeks.start[st.id] + i}</span>
+                      <span className="wp-title">{title}</span>
+                      <span className="wp-go" aria-hidden="true">Notes →</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
@@ -280,8 +378,22 @@ function Planner({ path }) {
 export function PathViewer({ id }) {
   const path = PATH_BY_ID[id];
   const done = useStore((s) => s.paths[id]?.done) || {};
+  const weeksDone = useStore((s) => s.paths[id]?.weeks) || {};
   const [sel, setSel] = useState(0);
-  useEffect(() => setSel(0), [id]);
+  const [tab, setTab] = useState('overview');
+  const [notes, setNotes] = useState(undefined); // undefined = loading, null = none
+  useEffect(() => { setSel(0); setTab('overview'); }, [id]);
+  useEffect(() => {
+    let alive = true;
+    setNotes(undefined);
+    loadNotes(id).then((n) => { if (alive) setNotes(n); }).catch(() => { if (alive) setNotes(null); });
+    return () => { alive = false; };
+  }, [id]);
+  const weeks = useMemo(() => (path ? weekNumbers(path, notes) : { start: {}, total: 0 }), [path, notes]);
+  const openNotes = (i) => {
+    setSel(i); setTab('notes');
+    requestAnimationFrame(() => document.getElementById('step-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
   if (!path) {
     return <main className="page wrap narrow" id="main"><div className="slab panel"><h1>Path not found</h1><a className="btn primary" href="#/paths">All career paths</a></div></main>;
   }
@@ -292,7 +404,7 @@ export function PathViewer({ id }) {
         <div>
           <p className="step"><a href="#/paths">Career paths</a> · {CATEGORIES.find((c) => c.id === path.category)?.label}{path.branch ? ` · ${path.branch}` : ''} · {path.source === 'skillbridge' ? 'SkillBridge role' : 'Skilly path'}</p>
           <h1><span aria-hidden="true">{path.icon}</span> {path.title}</h1>
-          <p className="muted">{path.summary} {path.steps.length} steps · click any node to explore.</p>
+          <p className="muted">{path.summary} {path.steps.length} steps{weeks.total ? ` · ${weeks.total}-week study plan` : ''} · click any node to explore.</p>
         </div>
         <div className="path-progress" aria-label={`${doneCount} of ${path.steps.length} steps complete`}>
           <b>{doneCount}/{path.steps.length}</b><span>steps done</span>
@@ -316,13 +428,17 @@ export function PathViewer({ id }) {
           <NodeMap path={path} sel={sel} onSelect={setSel} done={done} />
         </div>
         <div className="detail-col">
-          <StepPanel key={path.steps[sel].id} path={path} step={path.steps[sel]} index={sel} isDone={!!done[path.steps[sel].id]} />
+          <StepPanel key={path.steps[sel].id} path={path} step={path.steps[sel]} index={sel} isDone={!!done[path.steps[sel].id]}
+            tab={tab} onTab={setTab} notes={notes === undefined ? undefined : (notes?.[path.steps[sel].id] || null)}
+            firstWeek={weeks.start[path.steps[sel].id] || 1} weeksDone={weeksDone} />
           <div className="row between">
             <button type="button" className="btn ghost" disabled={sel === 0} onClick={() => setSel(sel - 1)}>← Previous step</button>
             <button type="button" className="btn ghost" disabled={sel === path.steps.length - 1} onClick={() => setSel(sel + 1)}>Next step →</button>
           </div>
         </div>
       </div>
+
+      <WeekPlan path={path} notes={notes} weeks={weeks} weeksDone={weeksDone} onOpen={openNotes} />
 
       <Planner path={path} />
 

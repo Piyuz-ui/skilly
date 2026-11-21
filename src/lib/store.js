@@ -15,7 +15,7 @@ export const DEFAULT_STATE = Object.freeze({
   reports: [], // newest last
   plans: {}, // id -> plan
   activePlanId: null,
-  paths: {}, // pathId -> { done: {stepId: true}, ratings: {skillId: 0-5}, hours: number }
+  paths: {}, // pathId -> { done: {stepId: true}, ratings: {skillId: 0-5}, hours: number, weeks: {'stepId:weekIndex': true} }
 });
 
 const AUDIENCES = ['professional', 'student', 'beginner'];
@@ -53,10 +53,13 @@ export function sanitize(raw) {
       if (!p || typeof p !== 'object') continue;
       const ratings = {};
       for (const [k, v] of Object.entries(p.ratings || {})) if (Number.isInteger(v) && v >= 0 && v <= 5) ratings[k] = v;
+      const weeks = {};
+      for (const [k, v] of Object.entries(p.weeks || {})) if (v === true && /^[\w-]+:\d+$/.test(k)) weeks[k] = true;
       s.paths[id] = {
         done: p.done && typeof p.done === 'object' ? p.done : {},
         ratings,
         hours: Number.isInteger(p.hours) && p.hours >= 1 && p.hours <= 40 ? p.hours : 6,
+        weeks,
       };
     }
   }

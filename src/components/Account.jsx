@@ -366,6 +366,7 @@ function Profile({ acct }) {
           <Stat n={stats.tasksDone} label="tasks done" />
           <Stat n={stats.pathsStarted} label="career paths started" />
           <Stat n={stats.stepsDone} label="path steps done" />
+          <Stat n={stats.weeksDone} label="study weeks done" />
         </div>
         <div className="row">
           {Object.keys(state.plans).length > 0 && <a className="btn primary sm" href="#/plan">Open my roadmap</a>}

@@ -65,6 +65,10 @@ const full = { ...local, attempt: { id: 'live', status: 'active' } };
 check('a test in progress is not synced', !('attempt' in syncable(full)));
 check('applying synced data keeps this device’s running test', withSynced(full, remote).attempt.id === 'live');
 
+const wk = mergeGenerous({ ...base, paths: { vlsi: { done: {}, ratings: {}, hours: 6, weeks: { 'logic:0': true } } } },
+  { ...base, paths: { vlsi: { done: {}, ratings: {}, hours: 6, weeks: { 'hdl:1': true } } } });
+check('ticked study weeks from both devices are kept', wk.paths.vlsi.weeks['logic:0'] && wk.paths.vlsi.weeks['hdl:1']);
+
 const st = summary(g);
 check('profile stats add up', st.tests === 2 && st.accuracy === 75 && st.roadmaps === 3 && st.tasksDone === 3 && st.pathsStarted === 2 && st.stepsDone === 3);
 

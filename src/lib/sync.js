@@ -74,6 +74,7 @@ function mergePath(a, b) {
     done: orTrue(a.done, b.done),
     ratings: { ...b.ratings, ...a.ratings },
     hours: a.hours ?? b.hours,
+    weeks: orTrue(a.weeks, b.weeks),
   };
 }
 
@@ -151,12 +152,14 @@ export function summary(state) {
   for (const p of plans) for (const w of Object.values(p.progress || {})) tasks += Object.values(w.tasks || {}).filter(Boolean).length;
   const paths = Object.values(state.paths || {});
   const steps = paths.reduce((n, p) => n + Object.values(p.done || {}).filter(Boolean).length, 0);
+  const weeks = paths.reduce((n, p) => n + Object.values(p.weeks || {}).filter(Boolean).length, 0);
   return {
     tests: reports.length,
     accuracy: total ? Math.round((correct / total) * 100) : null,
     roadmaps: plans.length,
     tasksDone: tasks,
-    pathsStarted: paths.filter((p) => Object.keys(p.done || {}).length || Object.keys(p.ratings || {}).length).length,
+    pathsStarted: paths.filter((p) => Object.keys(p.done || {}).length || Object.keys(p.ratings || {}).length || Object.keys(p.weeks || {}).length).length,
     stepsDone: steps,
+    weeksDone: weeks,
   };
 }

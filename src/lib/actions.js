@@ -138,12 +138,20 @@ export function prepareReassess({ languages, difficulty }) {
 // ─── Career paths ─────────────────────────────────────────────────────────
 function updatePath(pathId, fn) {
   store.set((s) => {
-    const prev = s.paths?.[pathId] || { done: {}, ratings: {}, hours: 6 };
+    const prev = s.paths?.[pathId] || { done: {}, ratings: {}, hours: 6, weeks: {} };
     return { ...s, paths: { ...s.paths, [pathId]: fn(prev) } };
   });
 }
 export function toggleStepDone(pathId, stepId) {
   updatePath(pathId, (p) => ({ ...p, done: { ...p.done, [stepId]: !p.done[stepId] } }));
+}
+// Ticks one study week in a path's weekly plan. key = 'stepId:weekIndex'.
+export function toggleWeekDone(pathId, key) {
+  updatePath(pathId, (p) => {
+    const weeks = { ...(p.weeks || {}) };
+    if (weeks[key]) delete weeks[key]; else weeks[key] = true;
+    return { ...p, weeks };
+  });
 }
 export function setRating(pathId, skillId, level) {
   updatePath(pathId, (p) => ({ ...p, ratings: { ...p.ratings, [skillId]: level } }));

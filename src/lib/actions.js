@@ -3,6 +3,19 @@ import { store } from './store.js';
 import { buildAttempt, scoreAttempt, validateSetup } from './engine.js';
 import { buildPlanFromReport, buildBeginnerPlan } from './roadmap.js';
 import { trackEvent } from './analytics.js';
+import { addDay } from './streak.js';
+
+// Marks today as an active study day (for streaks).
+export function recordActivity() {
+  store.set((s) => { const activity = addDay(s.activity); return activity === s.activity ? s : { ...s, activity }; });
+}
+
+// Records a solved coding problem in one language (first solve time kept).
+export function markSolved(problemId, lang) {
+  store.set((s) => (s.code?.[problemId]?.[lang] ? s : { ...s, code: { ...s.code, [problemId]: { ...s.code?.[problemId], [lang]: Date.now() } } }));
+  recordActivity();
+  trackEvent(`code-solved-${lang}`);
+}
 
 export function chooseAudience(audience) {
   if (audience && audience !== store.get().audience) trackEvent(`audience-${audience}`);
@@ -83,7 +96,7 @@ export function submitAttempt(reason = 'manual') {
       activePlanId: plan.id,
     };
   });
-  if (scored) trackEvent(`test-submit-${reason === 'timeout' ? 'timeout' : 'manual'}`);
+  if (scored) { trackEvent(`test-submit-${reason === 'timeout' ? 'timeout' : 'manual'}`); recordActivity(); }
   return reportId;
 }
 
@@ -111,7 +124,9 @@ function updateWeek(planId, weekId, fn) {
 }
 
 export function toggleTask(planId, weekId, index) {
+  const was = store.get().plans[planId]?.progress?.[weekId]?.tasks?.[index];
   updateWeek(planId, weekId, (p) => ({ ...p, tasks: { ...p.tasks, [index]: !p.tasks?.[index] } }));
+  if (!was) recordActivity();
 }
 
 export function quizAnswer(planId, weekId, qid, sourceIndex) {
@@ -125,6 +140,7 @@ export function quizSubmit(planId, weekId, questions) {
     const score = questions.filter((q) => answers[q.id] === q.correct).length;
     return { ...p, quiz: { answers, submitted: true, score, total: questions.length } };
   });
+  recordActivity();
 }
 
 export function quizRetake(planId, weekId) {
@@ -143,10 +159,12 @@ function updatePath(pathId, fn) {
   });
 }
 export function toggleStepDone(pathId, stepId) {
+  if (!store.get().paths?.[pathId]?.done?.[stepId]) recordActivity();
   updatePath(pathId, (p) => ({ ...p, done: { ...p.done, [stepId]: !p.done[stepId] } }));
 }
 // Ticks one study week in a path's weekly plan. key = 'stepId:weekIndex'.
 export function toggleWeekDone(pathId, key) {
+  if (!store.get().paths?.[pathId]?.weeks?.[key]) recordActivity();
   updatePath(pathId, (p) => {
     const weeks = { ...(p.weeks || {}) };
     if (weeks[key]) delete weeks[key]; else weeks[key] = true;

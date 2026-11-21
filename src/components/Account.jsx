@@ -6,6 +6,7 @@ import {
   sendPhoneCode, confirmPhoneCode, resetPhoneFlow, updateName, resendVerification, signOut, deleteAccount,
 } from '../lib/account.js';
 import { summary } from '../lib/sync.js';
+import { streakInfo } from '../lib/streak.js';
 import { useConfirm } from './Confirm.jsx';
 import { navigate } from '../lib/hooks.js';
 
@@ -367,6 +368,8 @@ function Profile({ acct }) {
           <Stat n={stats.pathsStarted} label="career paths started" />
           <Stat n={stats.stepsDone} label="path steps done" />
           <Stat n={stats.weeksDone} label="study weeks done" />
+          <Stat n={stats.solved} label="coding problems solved" />
+          <Stat n={streakInfo(state.activity).current} label="day streak 🔥" />
         </div>
         <div className="row">
           {Object.keys(state.plans).length > 0 && <a className="btn primary sm" href="#/plan">Open my roadmap</a>}

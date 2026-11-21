@@ -85,8 +85,8 @@ export function Feedback({ hidden }) {
   return (
     <>
       {!hidden && (
-        <button type="button" className="fb-fab" onClick={() => setOpen(true)} aria-haspopup="dialog">
-          <span aria-hidden="true">💬</span> Feedback
+        <button type="button" className="fb-fab" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label="Send feedback">
+          <span aria-hidden="true">💬</span><span className="fb-label" aria-hidden="true">Feedback</span>
         </button>
       )}
       {open && (

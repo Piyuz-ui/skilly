@@ -16,6 +16,7 @@ import { JellyLogo } from './components/JellyLogo.jsx';
 import { PathsIndex, PathViewer } from './components/Paths.jsx';
 import { BeginnerPick } from './components/BeginnerPick.jsx';
 import { Account, Avatar } from './components/Account.jsx';
+import { CodeIndex, CodeProblem } from './components/Code.jsx';
 import { useAccount, resumeIfSignedIn } from './lib/account.js';
 import { accountsEnabled } from './lib/firebase.js';
 
@@ -51,6 +52,7 @@ function Header({ route }) {
       <nav aria-label="Main">
         <ul role="list">
           {!onTest && <li><a className="nav-link" href="#/paths"><span className="nav-long">Career </span>paths</a></li>}
+          {!onTest && <li className="nav-hide-sm"><a className={`nav-link${route === 'code' ? ' on' : ''}`} href="#/code">Code</a></li>}
           <li><button type="button" className="nav-link" onClick={changePath}><span className="nav-long">Change path</span><span className="nav-short" aria-hidden="true">Switch</span></button></li>
            {lastReport && !onTest && <li className="nav-hide-sm"><a className="nav-link" href={`#/report/${lastReport.id}`}>Last report</a></li>}
           {hasPlan && !onTest && <li><a className="nav-link" href="#/plan"><span className="nav-long">My </span>roadmap</a></li>}
@@ -83,6 +85,7 @@ function Routes() {
     case 'plan': el = <Plan />; break;
     case 'beginner': el = <BeginnerPick />; break;
     case 'account': el = <Account />; break;
+    case 'code': el = parts[1] ? <CodeProblem key={parts[1]} id={parts[1]} /> : <CodeIndex />; break;
     case 'paths': el = parts[1] ? <PathViewer key={parts[1]} id={parts[1]} /> : <PathsIndex />; break;
     default: el = <Home />;
   }
@@ -130,6 +133,7 @@ function Footer({ quiet }) {
               <li><button type="button" onClick={() => go('/survey', 'student')}>Student assessment</button></li>
               <li><button type="button" onClick={() => go('/beginner', 'beginner')}>Beginner: pick a language</button></li>
               <li><a href="#/plan">My roadmap</a></li>
+              <li><a href="#/code">Coding practice</a></li>
             </ul>
           </nav>
           <nav className="footer-col" aria-label="Career paths">

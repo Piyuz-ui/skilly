@@ -7,6 +7,8 @@ import { QUESTION_COUNT } from '../lib/engine.js';
 import { PathCards } from './Paths.jsx';
 import { PATHS } from '../data/paths.js';
 import { LANGUAGES } from '../data/questions/index.js';
+import { ThisWeek } from './ThisWeek.jsx';
+import { PROBLEMS } from '../data/codeProblems.js';
 
 const CARDS = [
   {
@@ -52,6 +54,7 @@ export function Home() {
       <Hero />
       <section className="audience" aria-labelledby="who">
         <div className="wrap">
+          <ThisWeek />
           <h2 id="who" className="question">Which best describes you?</h2>
           {attempt && (
             <p className="resume glass-chip">
@@ -72,7 +75,20 @@ export function Home() {
               </li>
             ))}
           </ul>
-          <p className="fine">{LANGUAGES.length} languages · Tests are {Object.entries(QUESTION_COUNT).map(([m, n]) => `${m} min · ${n} questions`).join(' / ')}. Everything is saved in this browser only.</p>
+          <p className="fine">{LANGUAGES.length} languages · Tests are {Object.entries(QUESTION_COUNT).map(([m, n]) => `${m} min · ${n} questions`).join(' / ')}. Progress is saved in this browser, and to your account if you sign in.</p>
+        </div>
+      </section>
+      <section className="home-code" aria-labelledby="code-h">
+        <div className="wrap">
+          <a className="slab code-promo fx-tilt" href="#/code">
+            <span className="cp-icon" aria-hidden="true">{'</>'}</span>
+            <span className="cp-text">
+              <span className="eyebrow-sm">Coding practice</span>
+              <span id="code-h" className="cp-title">Write real code and get it checked</span>
+              <span className="muted">{PROBLEMS.length} placement-style problems in Python or JavaScript. Runs in your browser against hidden tests.</span>
+            </span>
+            <span className="card-arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
       <section className="home-paths" aria-labelledby="paths-h">

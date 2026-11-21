@@ -16,6 +16,8 @@ export const DEFAULT_STATE = Object.freeze({
   plans: {}, // id -> plan
   activePlanId: null,
   paths: {}, // pathId -> { done: {stepId: true}, ratings: {skillId: 0-5}, hours: number, weeks: {'stepId:weekIndex': true} }
+  code: {}, // problemId -> { js?: solvedAtMs, py?: solvedAtMs }
+  activity: [], // ['YYYY-MM-DD', …] days with real study activity (for streaks)
 });
 
 const AUDIENCES = ['professional', 'student', 'beginner'];
@@ -62,6 +64,17 @@ export function sanitize(raw) {
         weeks,
       };
     }
+  }
+  if (raw.code && typeof raw.code === 'object') {
+    for (const [id, c] of Object.entries(raw.code)) {
+      if (!c || typeof c !== 'object' || !/^[a-z0-9-]+$/.test(id)) continue;
+      const entry = {};
+      for (const lang of ['js', 'py']) if (Number.isFinite(c[lang])) entry[lang] = c[lang];
+      if (Object.keys(entry).length) s.code[id] = entry;
+    }
+  }
+  if (Array.isArray(raw.activity)) {
+    s.activity = [...new Set(raw.activity.filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort().slice(-400);
   }
   return s;
 }

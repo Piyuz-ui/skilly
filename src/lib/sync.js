@@ -21,8 +21,23 @@ export function syncable(state) {
     plans: state.plans,
     activePlanId: state.activePlanId,
     paths: state.paths,
+    code: state.code,
+    activity: state.activity,
   };
 }
+
+// Solved problems and active days only ever grow, so both merges are unions.
+function mergeCode(a = {}, b = {}) {
+  const out = { ...b };
+  for (const [id, c] of Object.entries(a)) {
+    const prev = out[id] || {};
+    const m = { ...prev };
+    for (const [lang, t] of Object.entries(c)) m[lang] = prev[lang] ? Math.min(prev[lang], t) : t;
+    out[id] = m;
+  }
+  return out;
+}
+const mergeDays = (a = [], b = []) => [...new Set([...a, ...b])].sort().slice(-400);
 
 // Put the synced part back into a full store state, keeping the device's
 // running test.
@@ -100,6 +115,8 @@ export function mergeGenerous(local, remote) {
     plans: mergeMap(local.plans, remote.plans, mergePlan),
     paths: mergeMap(local.paths, remote.paths, mergePath),
     activePlanId: local.activePlanId || remote.activePlanId || null,
+    code: mergeCode(local.code, remote.code),
+    activity: mergeDays(local.activity, remote.activity),
   };
   if (merged.activePlanId && !merged.plans[merged.activePlanId]) merged.activePlanId = null;
   return merged;
@@ -122,6 +139,8 @@ export function applyRemote(local, remote) {
     plans,
     paths,
     activePlanId: remote.activePlanId ?? local.activePlanId,
+    code: mergeCode(local.code, remote.code),
+    activity: mergeDays(local.activity, remote.activity),
   };
   if (merged.activePlanId && !merged.plans[merged.activePlanId]) merged.activePlanId = null;
   return merged;
@@ -161,5 +180,6 @@ export function summary(state) {
     pathsStarted: paths.filter((p) => Object.keys(p.done || {}).length || Object.keys(p.ratings || {}).length || Object.keys(p.weeks || {}).length).length,
     stepsDone: steps,
     weeksDone: weeks,
+    solved: Object.keys(state.code || {}).length,
   };
 }

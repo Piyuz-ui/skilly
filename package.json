@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "catalog": "node scripts/build-catalog.mjs",
     "check:questions": "node scripts/check-questions.mjs",
-    "test": "node scripts/check-questions.mjs && node scripts/test-logic.mjs && node scripts/test-sync.mjs && node scripts/check-notes.mjs",
+    "test": "node scripts/check-questions.mjs && node scripts/test-logic.mjs && node scripts/test-sync.mjs && node scripts/test-streak.mjs && node scripts/check-notes.mjs && node scripts/check-code-problems.mjs",
     "pdfs": "python3 presentation/build_pdfs.py",
     "emulators": "npx -y firebase-tools@15.35.0 emulators:start --project demo-skilly"
   },

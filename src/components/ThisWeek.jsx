@@ -5,6 +5,8 @@ import { PROBLEMS } from '../data/codeProblems.js';
 import { PATHS } from '../data/paths.js';
 import { DAYS, buildIcs, googleCalendarUrl, downloadIcs } from '../lib/calendar.js';
 import { weekProgress } from '../lib/roadmap.js';
+import { ShareButton } from './ShareCard.jsx';
+import { progressCard, hasProgress } from '../lib/shareCard.js';
 
 const REMINDER_KEY = 'skilly:reminder';
 const readPref = () => { try { return JSON.parse(localStorage.getItem(REMINDER_KEY)) || null; } catch { return null; } };
@@ -75,6 +77,9 @@ export function ThisWeek() {
           <li key={x.href + x.text}><a href={x.href}><span aria-hidden="true">{x.icon}</span><span>{x.text}</span><span aria-hidden="true" className="go">→</span></a></li>
         ))}
       </ul>
+      {hasProgress(progressCard(s)) && (
+        <div className="row tw-share"><ShareButton kind="progress" label="Share my progress" className="btn ghost sm" getCard={() => progressCard(s)} /></div>
+      )}
       <div className="reminder">
         {!open ? (
           <button type="button" className="link small" onClick={() => setOpen(true)} aria-expanded="false">📅 Add a weekly study reminder to my calendar</button>

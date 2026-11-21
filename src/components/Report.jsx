@@ -4,6 +4,8 @@ import { setActivePlan, prepareReassess, chooseAudience } from '../lib/actions.j
 import { navigate } from '../lib/hooks.js';
 import { QUESTION_BY_ID, LANGUAGE_BY_ID, topicLabel } from '../data/questions/index.js';
 import { CodeBlock } from './CodeBlock.jsx';
+import { ShareButton } from './ShareCard.jsx';
+import { reportCard } from '../lib/shareCard.js';
 
 const LETTERS = ['A', 'B', 'C', 'D'];
 const cap = (s) => s[0].toUpperCase() + s.slice(1);
@@ -58,6 +60,7 @@ export function Report({ id }) {
           {['medium', 'hard'].includes(level.next) && <button type="button" className="btn ghost" onClick={() => retake(level.next)}>Try {cap(level.next)}</button>}
           {level.next === 'easier' && <button type="button" className="btn ghost" onClick={() => retake('easy')}>Take an Easy baseline</button>}
           {level.next === 'reassess' && <button type="button" className="btn ghost" onClick={() => retake(report.difficulty)}>Reassess</button>}
+          {report.unanswered < report.total && <ShareButton kind="report" label="Share result" getCard={() => reportCard(report)} />}
         </div>
       </section>
 

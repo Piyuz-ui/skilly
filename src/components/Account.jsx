@@ -7,6 +7,8 @@ import {
 } from '../lib/account.js';
 import { summary } from '../lib/sync.js';
 import { streakInfo } from '../lib/streak.js';
+import { ShareButton } from './ShareCard.jsx';
+import { progressCard, hasProgress } from '../lib/shareCard.js';
 import { useConfirm } from './Confirm.jsx';
 import { navigate } from '../lib/hooks.js';
 
@@ -375,6 +377,7 @@ function Profile({ acct }) {
           {Object.keys(state.plans).length > 0 && <a className="btn primary sm" href="#/plan">Open my roadmap</a>}
           {lastReport && <a className="btn ghost sm" href={`#/report/${lastReport.id}`}>Last report</a>}
           <a className="btn ghost sm" href="#/paths">Career paths</a>
+          {hasProgress(progressCard(state)) && <ShareButton kind="progress" label="Share my progress" className="btn ghost sm" getCard={() => progressCard(state)} />}
           {!lastReport && <a className="btn ghost sm" href="#/">Take a test</a>}
         </div>
       </section>

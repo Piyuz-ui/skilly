@@ -17,6 +17,7 @@ import { PathsIndex, PathViewer } from './components/Paths.jsx';
 import { BeginnerPick } from './components/BeginnerPick.jsx';
 import { Account, Avatar } from './components/Account.jsx';
 import { CodeIndex, CodeProblem } from './components/Code.jsx';
+import { Review } from './components/Review.jsx';
 import { useAccount, resumeIfSignedIn } from './lib/account.js';
 import { accountsEnabled } from './lib/firebase.js';
 
@@ -86,6 +87,7 @@ function Routes() {
     case 'beginner': el = <BeginnerPick />; break;
     case 'account': el = <Account />; break;
     case 'code': el = parts[1] ? <CodeProblem key={parts[1]} id={parts[1]} /> : <CodeIndex />; break;
+    case 'review': el = <Review />; break;
     case 'paths': el = parts[1] ? <PathViewer key={parts[1]} id={parts[1]} /> : <PathsIndex />; break;
     default: el = <Home />;
   }
@@ -155,6 +157,7 @@ function Footer({ quiet }) {
             <h2 className="footer-sub">Help us improve</h2>
             <ul role="list">
               <li><button type="button" onClick={openFeedback}>Send feedback</button></li>
+              <li><a href="#/review">Teacher review</a></li>
             </ul>
           </div>
         </div>

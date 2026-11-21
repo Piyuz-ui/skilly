@@ -14,6 +14,7 @@ import * as swift from './swift.js';
 import * as php from './php.js';
 import * as ruby from './ruby.js';
 import * as dart from './dart.js';
+import { MORE } from './more/index.js';
 
 const MODULES = [python, java, cpp, javascript, typescript, csharp, sql, go, kotlin, rust, swift, php, ruby, dart];
 export const DIFFICULTIES = ['easy', 'medium', 'hard'];
@@ -27,7 +28,7 @@ export const QUESTIONS = [];
 for (const mod of MODULES) {
   const lang = mod.meta.id;
   for (const d of DIFFICULTIES) {
-    mod[d].forEach(([topic, prompt, code, options, explanation], i) => {
+    [...mod[d], ...(MORE[lang]?.[d] || [])].forEach(([topic, prompt, code, options, explanation], i) => {
       QUESTIONS.push({
         id: `${PREFIX[lang]}-${d}-${String(i + 1).padStart(2, '0')}`,
         language: lang,

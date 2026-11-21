@@ -899,3 +899,25 @@ img, video, canvas { max-width: 100%; }
 .share-caption { font-size: 0.9rem; color: var(--muted); padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--line); user-select: all; overflow-wrap: anywhere; }
 .share-actions, .share-links { gap: 8px; margin: 8px 0; }
 .tw-share { margin-top: -4px; }
+
+/* ── Question trust & teacher review ────────────────────────────────────── */
+.rv-trust { gap: 8px; margin-top: 10px; align-items: center; }
+.trust-chip { font-size: 0.78rem; background: rgba(134,217,174,0.12); border-color: rgba(134,217,174,0.4); color: var(--ok); }
+.report-q { color: var(--muted); }
+.ri-issues { display: grid; gap: 6px; }
+.ri-issues .seg-opt { flex-direction: row; align-items: center; }
+.review-page .review-controls .row { gap: 10px; }
+.review-progress { margin: 12px 0 6px; }
+.review-qs { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 12px; }
+.review-q { padding: 16px; border-radius: 16px; display: grid; gap: 8px; border-left: 3px solid var(--line); }
+.review-q.approved { border-left-color: var(--ok); }
+.review-q.needs-fix { border-left-color: var(--bad); }
+.review-q.stale { border-left-color: var(--warn); }
+.rq-head { gap: 8px; }
+.rq-chips { gap: 6px; }
+.rq-prompt { margin: 0; font-weight: 600; }
+.st-chip.approved { color: var(--ok); }
+.st-chip.needs-fix { color: var(--bad); }
+.st-chip.stale { color: var(--warn); }
+.mc-chip { color: var(--lavender); }
+.uid { padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.3); font-family: var(--mono); overflow-wrap: anywhere; }

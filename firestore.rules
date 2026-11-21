@@ -18,6 +18,28 @@ service cloud.firestore {
         && request.resource.data.updatedAt == request.time;
     }
 
+    // Reviewer accounts are added by the Skilly team in the Firebase console.
+    match /reviewers/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Teacher reviews of questions: anyone can read (to show badges);
+    // only listed reviewers can write, and only as themselves.
+    match /reviews/{qid} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && exists(/databases/$(database)/documents/reviewers/$(request.auth.uid))
+        && qid.matches('^[a-z]+-(easy|medium|hard)-[0-9]{2}$')
+        && request.resource.data.keys().hasOnly(['status', 'note', 'by', 'byName', 'at', 'version'])
+        && request.resource.data.status in ['approved', 'needs-fix']
+        && request.resource.data.by == request.auth.uid
+        && request.resource.data.note is string && request.resource.data.note.size() <= 900
+        && request.resource.data.byName is string && request.resource.data.byName.size() <= 80
+        && request.resource.data.version is string && request.resource.data.version.size() < 20
+        && request.resource.data.at == request.time;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

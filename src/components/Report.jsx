@@ -4,6 +4,9 @@ import { setActivePlan, prepareReassess, chooseAudience } from '../lib/actions.j
 import { navigate } from '../lib/hooks.js';
 import { QUESTION_BY_ID, LANGUAGE_BY_ID, topicLabel } from '../data/questions/index.js';
 import { CodeBlock } from './CodeBlock.jsx';
+import { useEffect, useState } from 'react';
+import { fetchReviews, reviewState, isMachineChecked } from '../lib/reviews.js';
+import { ReportIssue } from './ReportIssue.jsx';
 import { ShareButton } from './ShareCard.jsx';
 import { reportCard } from '../lib/shareCard.js';
 
@@ -15,6 +18,13 @@ const STATUS = { correct: 'Correct', incorrect: 'Incorrect', unanswered: 'Not an
 export function Report({ id }) {
   const report = useStore((s) => s.reports.find((r) => r.id === id));
   const hasPlan = useStore((s) => !!s.plans[id]);
+  // Teacher reviews for the questions in this report (light public read).
+  const [reviews, setReviews] = useState({});
+  useEffect(() => {
+    let alive = true;
+    if (report) fetchReviews(report.items.map((it) => it.id)).then((r) => { if (alive) setReviews(r); });
+    return () => { alive = false; };
+  }, [report?.id]);
   if (!report) {
     return (
       <main className="page wrap narrow" id="main">
@@ -122,6 +132,11 @@ export function Report({ id }) {
                   <p><strong>Your answer:</strong> {it.chosen === null ? 'Not answered' : `${pos(it.chosen)}. ${q.options[it.chosen]}`}</p>
                   <p><strong>Correct answer:</strong> {pos(q.correct)}. {q.options[q.correct]}</p>
                   <p className="explain">{q.explanation}</p>
+                  <div className="row rv-trust">
+                    {reviewState(q, reviews[q.id]) === 'approved' && <span className="chip static trust-chip">✓ Teacher-reviewed</span>}
+                    {isMachineChecked(q.id) && <span className="chip static trust-chip" title="We ran this code and the marked answer matched the real output.">✓ Answer checked by running the code</span>}
+                    <ReportIssue question={q} />
+                  </div>
                 </div>
               </details>
             );

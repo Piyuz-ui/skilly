@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { store } from '../lib/store.js';
 import { trackEvent } from '../lib/analytics.js';
+import { IN_APP, isLocalDev, postForm } from '../lib/platform.js';
 
 // Feedback goes to Netlify Forms: the hidden <form name="feedback"> in
 // index.html lets Netlify detect the form at deploy time, and this component
@@ -17,7 +18,6 @@ const MAX = 2000;
 
 export const openFeedback = () => window.dispatchEvent(new Event('skilly:feedback'));
 
-const isLocal = () => /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 
 export function Feedback({ hidden }) {
   const [open, setOpen] = useState(false);
@@ -60,18 +60,13 @@ export function Feedback({ hidden }) {
       email: email.trim(),
       page: (location.hash || '#/').split('?')[0].replace(/\/report\/[^/]+/, '/report'),
       journey: store.get().audience || 'none',
-      device: window.matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse',
+      device: `${window.matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse'}${IN_APP ? ' · app' : ''}`,
       'bot-field': '',
     };
-    if (isLocal()) { setStatus('preview'); return; }
+    if (isLocalDev()) { setStatus('preview'); return; }
     setStatus('sending');
     try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(fields).toString(),
-      });
-      if (!res.ok) throw new Error(String(res.status));
+      await postForm(fields);
       setStatus('sent');
       trackEvent('feedback-sent');
     } catch {

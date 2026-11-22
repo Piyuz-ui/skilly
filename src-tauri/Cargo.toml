@@ -1,0 +1,33 @@
+[package]
+name = "skilly"
+version = "0.1.0"
+description = "Skilly: honest skill tests, weekly roadmaps, coding practice and career paths"
+authors = ["Skilly"]
+license = ""
+repository = "https://github.com/Piyuz-ui/skilly"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+# The library holds the app; main.rs (desktop) and the phone apps both call it.
+name = "skilly_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+tauri-plugin-log = "2"
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+# Smaller, faster app: optimise across crates and strip debug symbols.
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

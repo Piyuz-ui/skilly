@@ -3,6 +3,7 @@
 // emails, and no cookies. Off when GOATCOUNTER_CODE is empty, on localhost, or
 // when the browser asks not to be tracked (Do Not Track / Global Privacy Control).
 import { GOATCOUNTER_CODE } from '../config.js';
+import { IN_APP } from './platform.js';
 
 // The full list of events Skilly can send (page views are counted by route,
 // for example /paths/vlsi). Keeping it here makes it easy to
@@ -17,7 +18,8 @@ export const EVENTS = {
   account: 'Created an account / signed in', // account-created-email, sign-in-google / -email / -phone
 };
 
-const isLocal = () => /^(localhost|127\.0\.0\.1|\[::1\]|.*\.local)$/.test(location.hostname);
+// The app's pages also use a localhost address, but they're real visits.
+const isLocal = () => !IN_APP && /^(localhost|127\.0\.0\.1|\[::1\]|.*\.local)$/.test(location.hostname);
 const optedOut = () => navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl === true;
 
 export const analyticsEnabled = () => Boolean(GOATCOUNTER_CODE) && !isLocal() && !optedOut();
@@ -28,7 +30,7 @@ const queue = [];
 function load() {
   if (loading) return loading;
   // Count manually: GoatCounter's auto-count would miss hash-route changes.
-  window.goatcounter = { no_onload: true, allow_local: false };
+  window.goatcounter = { no_onload: true, allow_local: IN_APP };
   loading = new Promise((resolve) => {
     const s = document.createElement('script');
     s.async = true;

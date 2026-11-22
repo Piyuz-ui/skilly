@@ -12,15 +12,22 @@
     "test": "node scripts/check-questions.mjs && node scripts/test-logic.mjs && node scripts/test-sync.mjs && node scripts/test-streak.mjs && node scripts/test-revise.mjs && node scripts/check-notes.mjs && node scripts/check-code-problems.mjs",
     "pdfs": "python3 presentation/build_pdfs.py",
     "emulators": "npx -y firebase-tools@15.35.0 emulators:start --project demo-skilly",
-    "verify:questions": "node scripts/verify-questions.mjs --strict"
+    "verify:questions": "node scripts/verify-questions.mjs --strict",
+    "app": "tauri dev",
+    "app:build": "tauri build",
+    "app:android": "tauri android dev",
+    "app:ios": "tauri ios dev"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.12.4",
+    "@tauri-apps/plugin-opener": "^2.7.2",
     "firebase": "13.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^5.4.11"
   }

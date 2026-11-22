@@ -6,6 +6,7 @@ import { PATHS } from '../data/paths.js';
 import { DAYS, buildIcs, googleCalendarUrl, downloadIcs } from '../lib/calendar.js';
 import { weekProgress } from '../lib/roadmap.js';
 import { reviewStats } from '../lib/revise.js';
+import { siteUrl } from '../lib/platform.js';
 import { ShareButton } from './ShareCard.jsx';
 import { progressCard, hasProgress } from '../lib/shareCard.js';
 
@@ -45,7 +46,7 @@ export function ThisWeek() {
   const [day, setDay] = useState(pref.day);
   const [time, setTime] = useState(pref.time);
   const [added, setAdded] = useState('');
-  const url = `${location.origin}${location.pathname}#/`;
+  const url = `${siteUrl()}/#/`;
 
   const addIcs = () => { savePref({ day, time }); downloadIcs(buildIcs({ day, time, url })); setAdded('ics'); };
   const onGoogle = () => { savePref({ day, time }); setAdded('google'); };

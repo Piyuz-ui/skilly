@@ -1,0 +1,48 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "Skilly",
+  "version": "0.1.0",
+  "identifier": "io.github.piyuzui.skilly",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Skilly",
+        "width": 1200,
+        "height": 820,
+        "minWidth": 360,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "backgroundColor": "#07050a"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    },
+    "category": "Education",
+    "shortDescription": "Skill tests, roadmaps and coding practice",
+    "longDescription": "Skilly helps you find out where you stand in 14 programming languages and practise what's next: honest skill tests, weekly roadmaps, daily mistake review, coding practice and career paths for every engineering branch.",
+    "copyright": "\u00a9 2026 Skilly"
+  }
+}

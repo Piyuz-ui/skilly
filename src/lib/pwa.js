@@ -4,6 +4,7 @@
 // - Tracks online/offline for a small notice.
 import { useSyncExternalStore } from 'react';
 import { trackEvent } from './analytics.js';
+import { IN_APP } from './platform.js';
 
 let deferred = null; // the beforeinstallprompt event (Chrome, Edge, Android)
 let installed = false;
@@ -18,6 +19,7 @@ const snap = () => {
 };
 
 export function isStandalone() {
+  if (IN_APP) return true; // already an app
   if (typeof window === 'undefined') return false;
   return window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
@@ -37,7 +39,8 @@ export function initPwa() {
   window.addEventListener('online', () => { online = true; emit(); });
   window.addEventListener('offline', () => { online = false; emit(); });
 
-  if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return;
+  // The app ships its files inside it, so it needs no service worker.
+  if (IN_APP || !import.meta.env.PROD || !('serviceWorker' in navigator)) return;
   const register = () => navigator.serviceWorker.register('./sw.js').catch(() => {});
   if (document.readyState === 'complete') setTimeout(register, 1000);
   else window.addEventListener('load', () => setTimeout(register, 1000), { once: true });

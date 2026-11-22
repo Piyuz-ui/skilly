@@ -15,8 +15,8 @@ export const FORMATS = {
 };
 
 const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : '');
-export const siteUrl = () => `${location.origin}${location.pathname}`.replace(/\/$/, '');
-export const siteHost = () => location.host;
+export { siteUrl, siteHost } from './platform.js';
+import { siteUrl, siteHost } from './platform.js';
 
 // ─── Card data ─────────────────────────────────────────────────────────────
 export function reportCard(report) {

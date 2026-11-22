@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { trackEvent } from '../lib/analytics.js';
+import { isLocalDev, postForm } from '../lib/platform.js';
 
 // "Report a problem" for one question. Sends to Netlify Forms (form name
 // "question-report", declared in index.html), so no sign-in is needed.
@@ -9,7 +10,6 @@ const ISSUES = [
   ['typo', 'Typo or formatting problem'],
   ['other', 'Something else'],
 ];
-const isLocal = () => /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
 
 export function ReportIssue({ question }) {
   const [open, setOpen] = useState(false);
@@ -32,15 +32,10 @@ function IssueDialog({ q, onClose }) {
   const submit = async (e) => {
     e.preventDefault();
     if (issue === 'other' && !note.trim()) { setState('need-note'); return; }
-    if (isLocal()) { setState('preview'); return; }
+    if (isLocalDev()) { setState('preview'); return; }
     setState('sending');
     try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ 'form-name': 'question-report', question: q.id, language: q.language, issue, note: note.trim().slice(0, 1500), 'bot-field': '' }).toString(),
-      });
-      if (!res.ok) throw new Error(String(res.status));
+      await postForm({ 'form-name': 'question-report', question: q.id, language: q.language, issue, note: note.trim().slice(0, 1500), 'bot-field': '' });
       setState('sent');
       trackEvent('question-report');
     } catch { setState('error'); }

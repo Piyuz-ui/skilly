@@ -67,4 +67,6 @@ save(rounded, 'icon-512.png', 512)
 save(square, 'icon-maskable-512.png', 512, opaque=True)
 save(tiny, 'favicon-32.png', 32)
 tiny.resize((64, 64), Image.LANCZOS).save(os.path.join(OUT, 'favicon.ico'), sizes=[(16, 16), (32, 32), (48, 48), (64, 64)])
-print('icons written to public/')
+# Source for the desktop/phone app icons (run: npx tauri icon src-tauri/app-icon.png).
+rounded.save(os.path.join(os.path.dirname(__file__), '..', 'src-tauri', 'app-icon.png'))
+print('icons written to public/ and src-tauri/app-icon.png')

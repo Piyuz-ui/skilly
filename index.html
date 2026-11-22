@@ -13,10 +13,21 @@
     <meta name="apple-mobile-web-app-title" content="Skilly" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <!-- Fonts load without blocking the first paint; system fonts show until they arrive. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+    <link rel="preconnect" href="https://gc.zgo.at" />
+    <!-- Paint the brand background before any CSS or JavaScript arrives. -->
+    <style>
+      html, body { margin: 0; background: #07050a; color: #f5f0f9; }
+      .boot { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; font: 600 clamp(2.4rem, 8vw, 4rem)/1 'Fredoka', system-ui, sans-serif; letter-spacing: 0.01em; background: radial-gradient(ellipse 70% 55% at 28% 38%, #2b1832 0%, transparent 62%), radial-gradient(ellipse 60% 50% at 82% 70%, #21122a 0%, transparent 60%), #07050a; }
+      .boot span { background: linear-gradient(120deg, #cdb9ec, #ec8ea4); -webkit-background-clip: text; background-clip: text; color: transparent; animation: boot-pulse 1.6s ease-in-out infinite; }
+      @keyframes boot-pulse { 50% { opacity: 0.55; } }
+      @media (prefers-reduced-motion: reduce) { .boot span { animation: none; } }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot" aria-label="Loading Skilly"><span>Skilly</span></div></div>
     <!-- Netlify Forms detects this hidden form at deploy time; the React
          feedback dialog (src/components/Feedback.jsx) posts to it. -->
     <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>

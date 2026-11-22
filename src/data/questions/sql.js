@@ -3,23 +3,9 @@
 //   employees(id INT PRIMARY KEY, name TEXT, dept_id INT, salary INT)
 //   departments(id INT PRIMARY KEY, name TEXT)
 // Row format documented in python.js. Append only.
-export const meta = {
-  id: 'sql',
-  label: 'SQL',
-  roadmap: 'sql',
-  dialectNote: 'PostgreSQL. Schema: employees(id, name, dept_id, salary), departments(id, name).',
-  topics: [
-    { key: 'select', label: 'SELECT basics', keywords: ['select', 'basic-sql', 'sql-keywords', 'from', 'order-by', 'distinct'] },
-    { key: 'filtering', label: 'Filtering & NULLs', keywords: ['where', 'null', 'filtering', 'like', 'between', 'coalesce'] },
-    { key: 'aggregation', label: 'Aggregation & grouping', keywords: ['aggregate', 'group-by', 'having', 'count', 'sum', 'avg'] },
-    { key: 'joins', label: 'Joins', keywords: ['join'] },
-    { key: 'modification', label: 'Inserting & updating data', keywords: ['insert', 'update', 'delete', 'data-manipulation'] },
-    { key: 'design', label: 'Keys, constraints & design', keywords: ['constraint', 'primary-key', 'foreign-key', 'normalization', 'data-definition'] },
-    { key: 'subqueries', label: 'Subqueries & CTEs', keywords: ['subquer', 'cte', 'correlated', 'recursive'] },
-    { key: 'windows', label: 'Window functions', keywords: ['window', 'rank', 'row_number', 'lead', 'lag'] },
-    { key: 'transactions', label: 'Transactions & performance', keywords: ['transaction', 'acid', 'isolation', 'index', 'performance', 'query-optimization', 'locking'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.sql;
 
 export const easy = [
   ['select', 'Which query returns every column of every employee?', null, ['SELECT * FROM employees;', 'SELECT ALL employees;', 'GET * FROM employees;', 'SELECT employees.*all;'], '* selects all columns.'],

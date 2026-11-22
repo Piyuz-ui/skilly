@@ -1,19 +1,7 @@
 // JavaScript question bank (modern browsers / Node, ES2022+). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'javascript',
-  label: 'JavaScript',
-  roadmap: 'javascript',
-  topics: [
-    { key: 'basics', label: 'Variables & types', keywords: ['variable', 'data-types', 'typeof', 'let', 'const', 'var'] },
-    { key: 'coercion', label: 'Equality & coercion', keywords: ['equality', 'type-conversion', 'coercion', 'comparison'] },
-    { key: 'arrays', label: 'Arrays', keywords: ['array', 'indexed-collections'] },
-    { key: 'objects', label: 'Objects & prototypes', keywords: ['object', 'prototype', 'class', 'json'] },
-    { key: 'functions', label: 'Functions, scope & closures', keywords: ['function', 'closure', 'scope', 'hoisting', 'arrow', 'this'] },
-    { key: 'control', label: 'Control flow', keywords: ['loops', 'conditional', 'control-flow', 'exception'] },
-    { key: 'async', label: 'Async & the event loop', keywords: ['async', 'promise', 'event-loop', 'callback', 'settimeout'] },
-    { key: 'dom', label: 'DOM & browser APIs', keywords: ['dom', 'browser', 'event'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.javascript;
 
 export const easy = [
   ['basics', 'What does typeof "hi" return?', null, ['"string"', '"String"', '"text"', '"object"'], 'typeof returns a lowercase string naming the primitive type.'],

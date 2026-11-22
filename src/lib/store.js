@@ -2,7 +2,7 @@
 // Updates are applied synchronously, so a second click (e.g. double submit)
 // always sees the state produced by the first.
 import { useSyncExternalStore } from 'react';
-import { QUESTION_BY_ID } from '../data/questions/index.js';
+import { QUESTION_BY_ID, isQuestionId, onQuestionsLoaded } from '../data/questions/index.js';
 
 const KEY = 'skilly:v1';
 const VERSION = 1;
@@ -37,12 +37,12 @@ export function sanitize(raw) {
   }
   const a = raw.attempt;
   if (a && a.status === 'active' && Array.isArray(a.questionIds) && a.questionIds.length
-      && a.questionIds.every((id) => QUESTION_BY_ID[id]) && typeof a.deadline === 'number'
+      && a.questionIds.every(isQuestionId) && typeof a.deadline === 'number'
       && a.optionOrders && a.questionIds.every((id) => Array.isArray(a.optionOrders[id]) && a.optionOrders[id].length === 4)) {
     s.attempt = { ...a, answers: a.answers && typeof a.answers === 'object' ? a.answers : {}, current: Number.isInteger(a.current) ? a.current : 0 };
   }
   if (Array.isArray(raw.reports)) {
-    s.reports = raw.reports.filter((r) => r && r.id && Array.isArray(r.items) && r.items.every((it) => QUESTION_BY_ID[it.id]));
+    s.reports = raw.reports.filter((r) => r && r.id && Array.isArray(r.items) && r.items.every((it) => isQuestionId(it.id)));
   }
   if (raw.plans && typeof raw.plans === 'object') {
     for (const [id, p] of Object.entries(raw.plans)) {
@@ -104,6 +104,17 @@ export const store = {
   reset() { store.set(structuredClone(DEFAULT_STATE)); },
   subscribe(l) { listeners.add(l); return () => listeners.delete(l); },
 };
+
+// Saved data is first checked against the id format (the question bank loads
+// later, on demand). Once the bank is in, drop anything that names a question
+// that doesn't exist, which only happens if the saved data was tampered with.
+onQuestionsLoaded(() => {
+  const s = state;
+  const attemptOk = !s.attempt || s.attempt.questionIds.every((id) => QUESTION_BY_ID[id]);
+  const reports = s.reports.filter((r) => r.items.every((it) => QUESTION_BY_ID[it.id]));
+  if (attemptOk && reports.length === s.reports.length) return;
+  store.set({ ...s, attempt: attemptOk ? s.attempt : null, reports });
+});
 
 // Keep tabs in sync.
 if (typeof window !== 'undefined') {

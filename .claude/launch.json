@@ -29,6 +29,18 @@
         "VITE_FIREBASE_AUTH_DOMAIN": "localhost",
         "VITE_FIREBASE_APP_ID": "demo"
       }
+    },
+    {
+      "name": "skilly-build",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "preview",
+        "--port",
+        "4173",
+        "--strictPort"
+      ],
+      "port": 4173
     }
   ]
 }

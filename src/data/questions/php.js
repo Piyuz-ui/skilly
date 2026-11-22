@@ -1,18 +1,7 @@
 // PHP question bank (PHP 8.2+). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'php',
-  label: 'PHP',
-  roadmap: 'php',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'introduction', 'type'] },
-    { key: 'strings', label: 'Strings', keywords: ['string'] },
-    { key: 'arrays', label: 'Arrays', keywords: ['array'] },
-    { key: 'functions', label: 'Functions', keywords: ['function', 'closure', 'arrow'] },
-    { key: 'oop', label: 'Classes & OOP', keywords: ['class', 'oop', 'object', 'interface', 'trait', 'inheritance'] },
-    { key: 'errors', label: 'Errors & exceptions', keywords: ['error', 'exception'] },
-    { key: 'web', label: 'Web, security & tooling', keywords: ['security', 'session', 'pdo', 'composer', 'xss', 'sql-injection', 'form'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.php;
 
 export const easy = [
   ['basics', 'How do PHP variable names begin?', null, ['With $', 'With @', 'With var', 'With #'], 'Example: $name = "Ann";'],

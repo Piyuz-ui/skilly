@@ -1,19 +1,7 @@
 // Kotlin question bank (Kotlin 1.9+/2.x). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'kotlin',
-  label: 'Kotlin',
-  roadmap: 'kotlin',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'introduction'] },
-    { key: 'nulls', label: 'Null safety', keywords: ['null'] },
-    { key: 'control', label: 'Conditions, when & loops', keywords: ['control', 'conditional', 'loops', 'when'] },
-    { key: 'collections', label: 'Collections', keywords: ['collection', 'list', 'map', 'sequence'] },
-    { key: 'functions', label: 'Functions & lambdas', keywords: ['function', 'lambda', 'extension', 'higher-order'] },
-    { key: 'classes', label: 'Classes & objects', keywords: ['class', 'object', 'data-class', 'inheritance', 'sealed', 'oop'] },
-    { key: 'coroutines', label: 'Coroutines', keywords: ['coroutine', 'concurrency', 'flow'] },
-    { key: 'generics', label: 'Generics', keywords: ['generic'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.kotlin;
 
 export const easy = [
   ['basics', 'What happens here?', 'val x = 5\nx = 6', ['A compile error: val cannot be reassigned', 'x becomes 6', 'A runtime exception', 'x stays 5 silently'], 'val is read-only after initialisation. Use var for a variable you reassign.'],

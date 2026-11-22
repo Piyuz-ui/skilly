@@ -1,19 +1,7 @@
 // Java question bank. Row format documented in python.js. Append only.
-export const meta = {
-  id: 'java',
-  label: 'Java',
-  roadmap: 'java',
-  topics: [
-    { key: 'basics', label: 'Syntax & primitive types', keywords: ['basic-syntax', 'data-types', 'variables', 'type-casting', 'math'] },
-    { key: 'strings', label: 'Strings', keywords: ['string'] },
-    { key: 'control', label: 'Conditions & loops', keywords: ['conditional', 'loops'] },
-    { key: 'collections', label: 'Arrays & collections', keywords: ['array', 'collection', 'list', 'map', 'set', 'stream'] },
-    { key: 'oop', label: 'Classes & OOP', keywords: ['class', 'object', 'inheritance', 'interface', 'abstraction', 'encapsulation', 'polymorphism', 'access-specifiers', 'static'] },
-    { key: 'exceptions', label: 'Exceptions', keywords: ['exception'] },
-    { key: 'generics', label: 'Generics', keywords: ['generic'] },
-    { key: 'concurrency', label: 'Threads & concurrency', keywords: ['thread', 'concurren', 'virtual-threads'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.java;
 
 export const easy = [
   ['basics', 'What is printed?', 'int x = 7 / 2;\nSystem.out.println(x);', ['3', '3.5', '4', 'Compile error'], 'Dividing two ints performs integer division and discards the fraction.'],

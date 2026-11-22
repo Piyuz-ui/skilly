@@ -1,19 +1,7 @@
 // Go question bank (Go 1.22+). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'go',
-  label: 'Go',
-  roadmap: 'golang',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'zero-values', 'constants', 'packages'] },
-    { key: 'slices', label: 'Slices & maps', keywords: ['slice', 'array', 'map', 'make'] },
-    { key: 'functions', label: 'Functions & defer', keywords: ['function', 'defer', 'closure', 'variadic', 'multiple-return'] },
-    { key: 'errors', label: 'Errors & panics', keywords: ['error', 'panic', 'recover'] },
-    { key: 'types', label: 'Structs & interfaces', keywords: ['struct', 'interface', 'method', 'embedding', 'type-assertion', 'type-switch'] },
-    { key: 'pointers', label: 'Pointers', keywords: ['pointer', 'memory'] },
-    { key: 'concurrency', label: 'Goroutines & channels', keywords: ['goroutine', 'channel', 'select', 'sync', 'mutex', 'waitgroup', 'context', 'concurrency'] },
-    { key: 'generics', label: 'Generics', keywords: ['generic'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.go;
 
 export const easy = [
   ['basics', 'What does x := 5 do inside a function?', null, ['Declares x and infers its type as int', 'Compares x to 5', 'Assigns to an existing x only', 'Declares a constant'], ':= is the short variable declaration.'],

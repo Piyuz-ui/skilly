@@ -12,7 +12,9 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { QUESTIONS } from '../src/data/questions/index.js';
+import { QUESTIONS, loadQuestions } from '../src/data/questions/index.js';
+
+await loadQuestions();
 
 const STRICT = process.argv.includes('--strict');
 const PRINT_PROMPT = /^(what (does|will) this( \w+)? (print|output|log)|what is (printed|logged|the output)|what gets printed|in what order are .* printed)/i;

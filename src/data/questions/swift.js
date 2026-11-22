@@ -1,19 +1,7 @@
 // Swift question bank (Swift 5.9+). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'swift',
-  label: 'Swift',
-  roadmap: 'swift-ui',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['introduction', 'constants--variables', 'integers', 'basic-functions'] },
-    { key: 'optionals', label: 'Optionals', keywords: ['optional', 'constants--variables'] },
-    { key: 'collections', label: 'Collections & closures', keywords: ['closures', 'collection', 'loops'] },
-    { key: 'control', label: 'Control flow', keywords: ['if--else', 'loops', 'continue--break'] },
-    { key: 'types', label: 'Structs, classes & enums', keywords: ['enumerations', 'inheritance', 'initialization', 'computed', 'methods'] },
-    { key: 'protocols', label: 'Protocols & generics', keywords: ['generics', 'extensions', 'protocol'] },
-    { key: 'errors', label: 'Errors & memory', keywords: ['error-handling', 'catching', 'arc', 'memory-safety'] },
-    { key: 'concurrency', label: 'Concurrency', keywords: ['actors', 'asynchronous-functions', 'asynchronous-sequences'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.swift;
 
 export const easy = [
   ['basics', 'What happens here?', 'let x = 5\nx = 6', ['A compile error: cannot assign to a let constant', 'x becomes 6', 'A runtime crash', 'A warning only'], 'let declares a constant. Use var for variables.'],

@@ -1,28 +1,64 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { useRoute, navigate } from './lib/hooks.js';
 import { trackPage } from './lib/analytics.js';
 import { Feedback, openFeedback } from './components/Feedback.jsx';
 import { useStore } from './lib/store.js';
 import { resetToSelector, discardAttempt, chooseAudience } from './lib/actions.js';
 import { PATHS } from './data/paths.js';
-import { LANGUAGES, QUESTIONS } from './data/questions/index.js';
+import { LANGUAGES, QUESTION_TOTAL, loadQuestions } from './data/questions/index.js';
 import { ConfirmProvider, useConfirm } from './components/Confirm.jsx';
 import { Home } from './components/Home.jsx';
-import { Survey, Setup } from './components/Survey.jsx';
-import { Test } from './components/Test.jsx';
-import { Report } from './components/Report.jsx';
-import { Plan } from './components/Plan.jsx';
 import { JellyLogo } from './components/JellyLogo.jsx';
-import { PathsIndex, PathViewer } from './components/Paths.jsx';
-import { BeginnerPick } from './components/BeginnerPick.jsx';
-import { Account, Avatar } from './components/Account.jsx';
-import { CodeIndex, CodeProblem } from './components/Code.jsx';
-import { Review } from './components/Review.jsx';
+import { Avatar } from './components/Avatar.jsx';
 import { useAccount, resumeIfSignedIn } from './lib/account.js';
 import { accountsEnabled } from './lib/firebase.js';
 
 // Reconnect to the account on load, but only if someone signed in here before.
 resumeIfSignedIn();
+
+// Every page except Home loads on demand, so the first visit downloads only
+// what the home page needs. Pages that show questions also wait for the
+// question bank. Each loader is shared by lazy() and prefetch().
+const withQuestions = (load) => () => Promise.all([loadQuestions(), load()]).then(([, m]) => m);
+const pages = {
+  survey: withQuestions(() => import('./components/Survey.jsx')),
+  test: withQuestions(() => import('./components/Test.jsx')),
+  report: withQuestions(() => import('./components/Report.jsx')),
+  plan: withQuestions(() => import('./components/Plan.jsx')),
+  paths: () => import('./components/Paths.jsx'),
+  beginner: withQuestions(() => import('./components/BeginnerPick.jsx')),
+  account: () => import('./components/Account.jsx'),
+  code: () => import('./components/Code.jsx'),
+  review: withQuestions(() => import('./components/Review.jsx')),
+};
+const lazyPage = (load, name) => lazy(() => load().then((m) => ({ default: m[name] })));
+const Survey = lazyPage(pages.survey, 'Survey');
+const Setup = lazyPage(pages.survey, 'Setup');
+const Test = lazyPage(pages.test, 'Test');
+const Report = lazyPage(pages.report, 'Report');
+const Plan = lazyPage(pages.plan, 'Plan');
+const PathsIndex = lazyPage(pages.paths, 'PathsIndex');
+const PathViewer = lazyPage(pages.paths, 'PathViewer');
+const BeginnerPick = lazyPage(pages.beginner, 'BeginnerPick');
+const Account = lazyPage(pages.account, 'Account');
+const CodeIndex = lazyPage(pages.code, 'CodeIndex');
+const CodeProblem = lazyPage(pages.code, 'CodeProblem');
+const Review = lazyPage(pages.review, 'Review');
+
+// Once the home page is up and the browser is idle, fetch the common pages
+// in the background so later clicks open instantly. Skipped on Data Saver.
+function prefetchPages() {
+  if (navigator.connection?.saveData) return;
+  // Wait a moment so the home page's own downloads (like the 3D scene) go first.
+  setTimeout(() => {
+    const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300));
+    idle(() => ['survey', 'paths', 'plan', 'beginner', 'code', 'report', 'test'].forEach((k) => pages[k]().catch(() => {})), { timeout: 4000 });
+  }, 2500);
+}
+
+function PageLoading() {
+  return <main id="main" tabIndex={-1} className="page wrap page-loading" aria-busy="true"><span className="sr-only">Loading…</span></main>;
+}
 
 function Header({ route }) {
   const attempt = useStore((s) => s.attempt);
@@ -76,6 +112,7 @@ function Routes() {
   const page = parts[0] || '';
   useEffect(() => { if (page !== '') window.scrollTo(0, 0); }, [page, parts[1]]);
   useEffect(() => { trackPage(parts); }, [page, parts[1]]);
+  useEffect(() => { if (document.readyState === 'complete') prefetchPages(); else window.addEventListener('load', prefetchPages, { once: true }); }, []);
   let el;
   switch (page) {
     case '': el = <Home />; break;
@@ -97,7 +134,7 @@ function Routes() {
       <Aurora quiet={page === 'test'} />
       {page !== 'test' && <div className="spotlight" aria-hidden="true" />}
       <Header route={page} />
-      {el}
+      <Suspense fallback={<PageLoading />}>{el}</Suspense>
       <Footer quiet={page === 'test'} />
       <Feedback hidden={page === 'test'} />
     </div>
@@ -125,7 +162,7 @@ function Footer({ quiet }) {
             <JellyLogo small />
             <p>Find out where you stand, then practise what’s next: honest skill tests, weekly roadmaps and whole career paths for every engineering branch.</p>
             <div className="footer-stats">
-              <span>{LANGUAGES.length} languages</span><span>{QUESTIONS.length} questions</span><span>{PATHS.length} career paths</span>
+              <span>{LANGUAGES.length} languages</span><span>{QUESTION_TOTAL.toLocaleString('en-IN')} questions</span><span>{PATHS.length} career paths</span>
             </div>
           </div>
           <nav className="footer-col" aria-label="Start">
@@ -162,7 +199,7 @@ function Footer({ quiet }) {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Skilly · Built on the SkillBridge idea (AARAMBHATHON Round 1). Your answers and progress stay in this browser. We only receive anonymous visit counts and the feedback you choose to send.</p>
+          <p>© {new Date().getFullYear()} Skilly · Built on the SkillBridge idea (AARAMBHATHON Round 1). Your answers and progress stay in this browser unless you sign in, which saves them to your account. We receive anonymous visit counts, the feedback you choose to send and, when you sign in, your name and email.</p>
           <button type="button" className="btn ghost sm" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}>Back to top ↑</button>
         </div>
       </div>

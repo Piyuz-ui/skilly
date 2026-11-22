@@ -1,5 +1,7 @@
 // Validates the question bank: counts, unique IDs, 4 distinct options, known topics.
-import { QUESTIONS, LANGUAGES, DIFFICULTIES } from '../src/data/questions/index.js';
+import { QUESTIONS, LANGUAGES, DIFFICULTIES, QUESTION_TOTAL, loadQuestions } from '../src/data/questions/index.js';
+
+await loadQuestions();
 
 let errors = 0;
 const fail = (m) => { errors++; console.error('✗', m); };
@@ -21,5 +23,6 @@ for (const l of LANGUAGES) {
   });
   console.log(l.label.padEnd(11), row.join('  '));
 }
+if (QUESTIONS.length !== QUESTION_TOTAL) fail(`QUESTION_TOTAL in src/data/questions/index.js is ${QUESTION_TOTAL}; set it to ${QUESTIONS.length}`);
 console.log(`${QUESTIONS.length} questions, ${errors} problems`);
 process.exit(errors ? 1 : 0);

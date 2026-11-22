@@ -4,22 +4,9 @@
 // options once per attempt and stores that order. IDs are derived from
 // position (py-easy-01 …) so only APPEND new rows to keep IDs stable.
 
-export const meta = {
-  id: 'python',
-  label: 'Python',
-  roadmap: 'python',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic-syntax', 'variables', 'data-types', 'type-casting'] },
-    { key: 'strings', label: 'Strings', keywords: ['string', 'basic-syntax'] },
-    { key: 'collections', label: 'Lists, dicts & sets', keywords: ['list', 'dictionar', 'tuple', 'set', 'arrays'] },
-    { key: 'control', label: 'Conditions & loops', keywords: ['conditional', 'loops'] },
-    { key: 'functions', label: 'Functions & scope', keywords: ['function', 'lambda', 'decorator', 'builtin'] },
-    { key: 'errors', label: 'Exceptions', keywords: ['exception', 'context-manager'] },
-    { key: 'oop', label: 'Classes & OOP', keywords: ['class', 'oop', 'inheritance', 'object', 'dunder'] },
-    { key: 'iterators', label: 'Iterators & generators', keywords: ['iterator', 'generator', 'comprehension'] },
-    { key: 'concurrency', label: 'Concurrency & async', keywords: ['async', 'concurrency', 'gil', 'thread', 'multiprocess'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.python;
 
 export const easy = [
   ['basics', 'What does this print?', 'print(type(3 / 2))', ["<class 'float'>", "<class 'int'>", "<class 'decimal'>", 'It raises a TypeError'], 'The / operator always performs true division in Python 3 and returns a float (1.5).'],

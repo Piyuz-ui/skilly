@@ -1,20 +1,7 @@
 // C++ question bank (C++17 unless stated). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'cpp',
-  label: 'C++',
-  roadmap: 'cpp',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'data-types', 'arithmetic', 'operators', 'variables', 'type-casting'] },
-    { key: 'control', label: 'Conditions & loops', keywords: ['control-flow', 'loops', 'conditional'] },
-    { key: 'functions', label: 'Functions & lambdas', keywords: ['function', 'lambda', 'overload'] },
-    { key: 'pointers', label: 'Pointers & references', keywords: ['pointer', 'reference'] },
-    { key: 'memory', label: 'Memory & ownership', keywords: ['memory', 'smart-pointer', 'unique', 'shared', 'weak', 'raii', 'move', 'rule-of'] },
-    { key: 'oop', label: 'Classes & OOP', keywords: ['object-oriented', 'class', 'virtual', 'inheritance', 'polymorphism', 'structures'] },
-    { key: 'stl', label: 'Standard library (STL)', keywords: ['stl', 'containers', 'iterators', 'algorithms', 'standard-library'] },
-    { key: 'templates', label: 'Templates', keywords: ['template', 'sfinae', 'specialization'] },
-    { key: 'ub', label: 'Undefined behaviour & concurrency', keywords: ['undefined-behavior', 'multithreading', 'concurrency'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.cpp;
 
 export const easy = [
   ['basics', 'What is the value of x?', 'int x = 5 / 2;', ['2', '2.5', '3', '2.0'], 'Integer division truncates toward zero.'],

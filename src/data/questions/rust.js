@@ -1,19 +1,7 @@
 // Rust question bank (Rust 2021 edition). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'rust',
-  label: 'Rust',
-  roadmap: 'rust',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'variables', 'data-types', 'introduction', 'integers'] },
-    { key: 'ownership', label: 'Ownership & moves', keywords: ['ownership', 'move', 'copy', 'clone'] },
-    { key: 'borrowing', label: 'Borrowing & lifetimes', keywords: ['borrow', 'reference', 'lifetime'] },
-    { key: 'enums', label: 'Enums & pattern matching', keywords: ['enum', 'pattern', 'match', 'option'] },
-    { key: 'errors', label: 'Error handling', keywords: ['error', 'result', 'panic'] },
-    { key: 'collections', label: 'Collections & iterators', keywords: ['vector', 'collection', 'hashmap', 'iterator', 'string'] },
-    { key: 'traits', label: 'Structs, traits & generics', keywords: ['trait', 'struct', 'generic', 'impl'] },
-    { key: 'concurrency', label: 'Smart pointers & concurrency', keywords: ['concurren', 'thread', 'smart-pointer', 'box', 'rc', 'arc', 'mutex'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.rust;
 
 export const easy = [
   ['basics', 'What happens here?', 'let x = 5;\nx = 6;', ['A compile error: cannot assign twice to an immutable variable', 'x becomes 6', 'A runtime panic', 'A warning only'], 'Bindings are immutable by default. Use let mut.'],

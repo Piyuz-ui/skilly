@@ -1,50 +1,46 @@
-// Question bank entry point. Each language file exports `meta`, `easy`, `medium`, `hard`.
-// Rows are expanded here into full question objects with stable IDs.
-import * as python from './python.js';
-import * as java from './java.js';
-import * as cpp from './cpp.js';
-import * as javascript from './javascript.js';
-import * as typescript from './typescript.js';
-import * as csharp from './csharp.js';
-import * as sql from './sql.js';
-import * as go from './go.js';
-import * as kotlin from './kotlin.js';
-import * as rust from './rust.js';
-import * as swift from './swift.js';
-import * as php from './php.js';
-import * as ruby from './ruby.js';
-import * as dart from './dart.js';
-import { MORE } from './more/index.js';
+// Question bank entry point.
+//
+// Language details (LANGUAGES, topics) are always available. The questions
+// themselves (QUESTIONS, QUESTION_BY_ID) start empty and are filled in by
+// loadQuestions(), which downloads bank.js the first time a page needs them.
+// Pages that use questions are loaded through App.jsx, which waits for
+// loadQuestions() first, so their code can read QUESTIONS synchronously.
+import { META, LANGUAGE_ORDER, DIFFICULTIES, PREFIX } from './meta.js';
 
-const MODULES = [python, java, cpp, javascript, typescript, csharp, sql, go, kotlin, rust, swift, php, ruby, dart];
-export const DIFFICULTIES = ['easy', 'medium', 'hard'];
-
-const PREFIX = { python: 'py', java: 'java', cpp: 'cpp', javascript: 'js', typescript: 'ts', csharp: 'cs', sql: 'sql', go: 'go', kotlin: 'kt', rust: 'rs', swift: 'swift', php: 'php', ruby: 'rb', dart: 'dart' };
-
-export const LANGUAGES = MODULES.map((m) => m.meta);
+export { DIFFICULTIES, PREFIX };
+export const LANGUAGES = LANGUAGE_ORDER.map((id) => META[id]);
 export const LANGUAGE_BY_ID = Object.fromEntries(LANGUAGES.map((l) => [l.id, l]));
 
+// Shown on the home page before the bank loads. scripts/check-questions.mjs
+// fails if this drifts from the real count.
+export const QUESTION_TOTAL = 1008;
+
+// Filled in place, so modules that imported them see the data once loaded.
 export const QUESTIONS = [];
-for (const mod of MODULES) {
-  const lang = mod.meta.id;
-  for (const d of DIFFICULTIES) {
-    [...mod[d], ...(MORE[lang]?.[d] || [])].forEach(([topic, prompt, code, options, explanation], i) => {
-      QUESTIONS.push({
-        id: `${PREFIX[lang]}-${d}-${String(i + 1).padStart(2, '0')}`,
-        language: lang,
-        topic,
-        difficulty: d,
-        prompt,
-        code: code || null,
-        options, // source order; options[correct] is the answer
-        correct: 0,
-        explanation,
-      });
-    });
-  }
+export const QUESTION_BY_ID = {};
+
+const listeners = new Set();
+let loading = null;
+export const questionsLoaded = () => QUESTIONS.length > 0;
+export function onQuestionsLoaded(fn) {
+  if (questionsLoaded()) fn(); else listeners.add(fn);
+}
+export function loadQuestions() {
+  loading ??= import('./bank.js').then(({ buildQuestions }) => {
+    if (!questionsLoaded()) {
+      for (const q of buildQuestions()) { QUESTIONS.push(q); QUESTION_BY_ID[q.id] = q; }
+      for (const fn of listeners) { try { fn(); } catch { /* keep going */ } }
+      listeners.clear();
+    }
+    return QUESTIONS;
+  }).catch((e) => { loading = null; throw e; });
+  return loading;
 }
 
-export const QUESTION_BY_ID = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]));
+// Question ids look like py-easy-01. Used to check saved data before the
+// bank has loaded.
+const ID_RE = new RegExp(`^(${Object.values(PREFIX).join('|')})-(easy|medium|hard)-\\d{2,}$`);
+export const isQuestionId = (id) => (questionsLoaded() ? Boolean(QUESTION_BY_ID[id]) : typeof id === 'string' && ID_RE.test(id));
 
 export function topicLabel(language, key) {
   const t = LANGUAGE_BY_ID[language]?.topics.find((x) => x.key === key);

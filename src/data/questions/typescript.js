@@ -1,19 +1,7 @@
 // TypeScript question bank (TS 5.x, "strict": true unless stated). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'typescript',
-  label: 'TypeScript',
-  roadmap: 'typescript',
-  topics: [
-    { key: 'basics', label: 'Types & inference', keywords: ['primitive', 'type-inference', 'any', 'unknown', 'never', 'void', 'enum', 'tuple', 'literal'] },
-    { key: 'objects', label: 'Interfaces & object types', keywords: ['interface', 'type-alias', 'object', 'readonly'] },
-    { key: 'functions', label: 'Typed functions', keywords: ['function', 'overload'] },
-    { key: 'narrowing', label: 'Unions & narrowing', keywords: ['union', 'narrowing', 'type-guard', 'typeof', 'instanceof', 'discriminat', 'assertion'] },
-    { key: 'generics', label: 'Generics', keywords: ['generic', 'constraint'] },
-    { key: 'utility', label: 'Utility & mapped types', keywords: ['utility', 'partial', 'pick', 'omit', 'record', 'mapped', 'keyof', 'indexed'] },
-    { key: 'advanced', label: 'Conditional & template types', keywords: ['conditional', 'template-literal', 'advanced-types', 'infer'] },
-    { key: 'tooling', label: 'Compiler & config', keywords: ['tsconfig', 'compiler', 'tsc', 'strict'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.typescript;
 
 export const easy = [
   ['basics', 'What happens with this line?', 'let n: number = "5";', ['A compile-time type error', 'n becomes 5', 'n becomes "5"', 'A runtime exception'], 'A string is not assignable to number.'],

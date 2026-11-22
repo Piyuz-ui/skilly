@@ -1,20 +1,8 @@
 // C# question bank (C# 10+ / .NET 6+). Row format documented in python.js. Append only.
 // roadmap.sh has no C#-only roadmap; ASP.NET Core is the closest match.
-export const meta = {
-  id: 'csharp',
-  label: 'C#',
-  roadmap: 'aspnet-core',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['learn-the-basics-of-c', 'framework-basics', 'general-development-skills'] },
-    { key: 'strings', label: 'Strings', keywords: ['learn-the-basics-of-c'] },
-    { key: 'collections', label: 'Collections', keywords: ['data-structures-and-algorithms', 'learn-the-basics-of-c'] },
-    { key: 'control', label: 'Conditions & loops', keywords: ['learn-the-basics-of-c'] },
-    { key: 'oop', label: 'Classes & OOP', keywords: ['learn-the-basics-of-c', 'dependency-injection'] },
-    { key: 'exceptions', label: 'Exceptions', keywords: ['learn-the-basics-of-c', 'log-frameworks'] },
-    { key: 'linq', label: 'LINQ', keywords: ['entity-framework-core', 'object-relational-mapping', 'lazy-eager-explicit-loading'] },
-    { key: 'async', label: 'Async & tasks', keywords: ['native-background-service', 'task-scheduling', 'real-time-communication'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.csharp;
 
 export const easy = [
   ['basics', 'What is x?', 'int x = 7 / 2;', ['3', '3.5', '4', 'Compile error'], 'int / int performs integer division.'],

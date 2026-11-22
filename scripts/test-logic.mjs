@@ -4,7 +4,15 @@ import { buildAttempt, scoreAttempt, validateSetup, levelSummary, breakdown, QUE
 import { buildRows, readiness, buildSchedule } from '../src/lib/gap.js';
 import { PATHS, PATH_BY_ID, SKILLS } from '../src/data/paths.js';
 import { buildPlanFromReport, buildBeginnerPlan } from '../src/lib/roadmap.js';
-import { QUESTION_BY_ID } from '../src/data/questions/index.js';
+import { QUESTION_BY_ID, QUESTIONS, loadQuestions, isQuestionId } from '../src/data/questions/index.js';
+
+// Ids are checked by format until the bank loads, then exactly.
+assert.equal(QUESTIONS.length, 0);
+assert.equal(isQuestionId('py-easy-99'), true);
+assert.equal(isQuestionId('zz-easy-01'), false);
+await loadQuestions();
+assert.equal(isQuestionId('py-easy-99'), false);
+assert.equal(isQuestionId('py-easy-01'), true);
 
 let n = 0;
 const test = (name, fn) => { fn(); n++; console.log('✓', name); };

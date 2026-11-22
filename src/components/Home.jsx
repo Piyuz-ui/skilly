@@ -4,7 +4,7 @@ import { chooseAudience, discardAttempt } from '../lib/actions.js';
 import { navigate } from '../lib/hooks.js';
 import { useConfirm } from './Confirm.jsx';
 import { QUESTION_COUNT } from '../lib/engine.js';
-import { PathCards } from './Paths.jsx';
+import { PathCards } from './PathCards.jsx';
 import { PATHS } from '../data/paths.js';
 import { LANGUAGES } from '../data/questions/index.js';
 import { ThisWeek } from './ThisWeek.jsx';

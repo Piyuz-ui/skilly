@@ -1,18 +1,7 @@
 // Dart question bank (Dart 3, sound null safety). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'dart',
-  label: 'Dart',
-  roadmap: 'flutter',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basics-of-dart', 'built-in-types', 'operators'] },
-    { key: 'nulls', label: 'Null safety', keywords: ['null', 'basics-of-dart'] },
-    { key: 'collections', label: 'Collections', keywords: ['collections', 'lists'] },
-    { key: 'functions', label: 'Functions', keywords: ['functions', 'lambdas', 'functional-programming'] },
-    { key: 'classes', label: 'Classes & mixins', keywords: ['oop', 'advanced-dart'] },
-    { key: 'async', label: 'Async, futures & streams', keywords: ['futures', 'async--await', 'isolates', 'streams'] },
-    { key: 'flutter', label: 'Flutter basics', keywords: ['inherited-widgets', 'changenotifier', 'material-widgets', 'stateful'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.dart;
 
 export const easy = [
   ['basics', 'What happens?', 'var x = 5;\nx = "a";', ['A compile error — x was inferred as int', 'x becomes "a"', 'A runtime error', 'x becomes dynamic'], 'var infers a static type from the initialiser.'],

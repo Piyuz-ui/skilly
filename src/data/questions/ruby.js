@@ -1,18 +1,7 @@
 // Ruby question bank (Ruby 3.2+). Row format documented in python.js. Append only.
-export const meta = {
-  id: 'ruby',
-  label: 'Ruby',
-  roadmap: 'ruby',
-  topics: [
-    { key: 'basics', label: 'Syntax & types', keywords: ['basic', 'syntax', 'variables', 'data-types', 'introduction'] },
-    { key: 'strings', label: 'Strings & symbols', keywords: ['string', 'symbol'] },
-    { key: 'collections', label: 'Arrays, hashes & ranges', keywords: ['array', 'hash', 'range', 'enumerable'] },
-    { key: 'blocks', label: 'Blocks, procs & lambdas', keywords: ['block', 'proc', 'lambda', 'iterator'] },
-    { key: 'oop', label: 'Classes & modules', keywords: ['class', 'module', 'object', 'inheritance', 'mixin'] },
-    { key: 'control', label: 'Control flow & errors', keywords: ['control', 'conditional', 'loop', 'exception', 'error'] },
-    { key: 'meta', label: 'Metaprogramming & runtime', keywords: ['metaprogramming', 'reflection', 'concurrency', 'thread'] },
-  ],
-};
+import { META } from './meta.js';
+
+export const meta = META.ruby;
 
 export const easy = [
   ['basics', 'What does puts "Hi" do?', null, ['Prints Hi followed by a newline', 'Prints Hi without a newline', 'Returns "Hi"', 'Raises an error'], 'puts adds a newline; print does not. puts returns nil.'],

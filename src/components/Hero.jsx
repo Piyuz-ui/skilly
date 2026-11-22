@@ -15,8 +15,19 @@ function BubbleLayer() {
     const sync = () => { if (!scene) return; if (visible && !document.hidden) scene.start(); else scene.stop(); };
     const onVis = () => sync();
 
-    import('./bubbleScene.js').then(({ createBubbleScene, webglAvailable }) => {
-      if (disposed) return;
+    // The 3D scene (three.js, ~120 kB) is decoration: start it only after the
+    // page has loaded and the browser is idle, and use the light CSS version
+    // on Data Saver or 2G connections.
+    const conn = navigator.connection;
+    if (conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType || '')) { setFallback(true); return undefined; }
+    const whenIdle = () => new Promise((res) => {
+      const go = () => (window.requestIdleCallback ? requestIdleCallback(() => res(), { timeout: 1200 }) : setTimeout(res, 200));
+      if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+    });
+
+    whenIdle().then(() => (disposed ? null : import('./bubbleScene.js'))).then((mod) => {
+      if (disposed || !mod) return;
+      const { createBubbleScene, webglAvailable } = mod;
       if (!webglAvailable() || new URLSearchParams(location.search).has('nowebgl')) { setFallback(true); return; }
       try {
         scene = createBubbleScene(canvasRef.current, { reducedMotion: reduced, mobile: window.innerWidth < 700 });

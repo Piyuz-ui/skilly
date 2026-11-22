@@ -9,6 +9,7 @@ import { store, sanitize, DEFAULT_STATE } from './store.js';
 import { accountsEnabled, loadFirebase } from './firebase.js';
 import { syncable, withSynced, mergeGenerous, applyRemote, fitToLimit, SYNC_SCHEMA } from './sync.js';
 import { trackEvent } from './analytics.js';
+import { notifyAccountEvent } from './notify.js';
 
 const FLAG = 'skilly:account';   // '1' when someone was signed in on this device
 const OWNER = 'skilly:owner';    // uid whose progress the local data belongs to
@@ -73,7 +74,9 @@ export function startAccounts() {
       }
     });
     // Finishes a Google sign-in that had to use a full-page redirect.
-    f.A.getRedirectResult(f.auth).catch((e) => setAcct({ error: friendly(e) }));
+    f.A.getRedirectResult(f.auth)
+      .then((cred) => { if (cred) notifyAccountEvent(f.A.getAdditionalUserInfo(cred)?.isNewUser ? 'new-account' : 'sign-in', 'google', cred.user); })
+      .catch((e) => setAcct({ error: friendly(e) }));
     return f;
   }).catch((e) => {
     started = null;
@@ -139,12 +142,17 @@ export async function signUpWithEmail({ name, email, password }) {
     A.sendEmailVerification(cred.user).catch(() => {});
     setAcct({ user: toUser(auth.currentUser) });
     trackEvent('account-created-email');
+    notifyAccountEvent('new-account', 'email', auth.currentUser);
   } catch (e) { fail(e); }
 }
 
 export async function signInWithEmail({ email, password }) {
   const { auth, A } = await ready();
-  try { await A.signInWithEmailAndPassword(auth, email.trim(), password); trackEvent('sign-in-email'); } catch (e) { fail(e); }
+  try {
+    const cred = await A.signInWithEmailAndPassword(auth, email.trim(), password);
+    trackEvent('sign-in-email');
+    notifyAccountEvent('sign-in', 'email', cred.user);
+  } catch (e) { fail(e); }
 }
 
 export async function resetPassword(email) {
@@ -157,8 +165,9 @@ export async function signInWithGoogle() {
   const provider = new A.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
   try {
-    await A.signInWithPopup(auth, provider);
+    const cred = await A.signInWithPopup(auth, provider);
     trackEvent('sign-in-google');
+    notifyAccountEvent(A.getAdditionalUserInfo(cred)?.isNewUser ? 'new-account' : 'sign-in', 'google', cred.user);
   } catch (e) {
     // Some phone browsers block pop-ups: fall back to a full-page redirect.
     if (e?.code === 'auth/popup-blocked' || e?.code === 'auth/operation-not-supported-in-this-environment') {
@@ -191,9 +200,10 @@ export async function sendPhoneCode(phone, buttonId) {
 export async function confirmPhoneCode(code) {
   if (!confirmation) throw new Error('Send a code first.');
   try {
-    await confirmation.confirm(code.trim());
+    const cred = await confirmation.confirm(code.trim());
     resetPhoneFlow();
     trackEvent('sign-in-phone');
+    ready().then(({ A }) => notifyAccountEvent(A.getAdditionalUserInfo(cred)?.isNewUser ? 'new-account' : 'sign-in', 'phone', cred.user)).catch(() => {});
   } catch (e) { fail(e); }
 }
 

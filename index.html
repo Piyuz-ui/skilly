@@ -26,6 +26,11 @@
     <form name="question-report" data-netlify="true" netlify-honeypot="bot-field" hidden>
       <input name="question" /><input name="language" /><input name="issue" /><textarea name="note"></textarea><input name="bot-field" />
     </form>
+    <!-- New accounts and sign-ins (src/lib/notify.js); Netlify emails the team. -->
+    <form name="account-event" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input name="event" /><input name="method" /><input name="name" /><input name="email" />
+      <input name="phone" /><input name="uid" /><input name="device" /><input name="bot-field" />
+    </form>
     <noscript>Skilly needs JavaScript to run assessments.</noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -4,6 +4,7 @@ import { buildAttempt, scoreAttempt, validateSetup } from './engine.js';
 import { buildPlanFromReport, buildBeginnerPlan } from './roadmap.js';
 import { trackEvent } from './analytics.js';
 import { addDay } from './streak.js';
+import { addMistakes, grade } from './revise.js';
 
 // Marks today as an active study day (for streaks).
 export function recordActivity() {
@@ -11,6 +12,11 @@ export function recordActivity() {
 }
 
 // Records a solved coding problem in one language (first solve time kept).
+// One answer in a "Fix my mistakes" session.
+export function answerReview(id, correct) {
+  store.set((s) => ({ ...s, review: grade(s.review, id, correct) }));
+  recordActivity();
+}
 export function markSolved(problemId, lang) {
   store.set((s) => (s.code?.[problemId]?.[lang] ? s : { ...s, code: { ...s.code, [problemId]: { ...s.code?.[problemId], [lang]: Date.now() } } }));
   recordActivity();
@@ -92,6 +98,7 @@ export function submitAttempt(reason = 'manual') {
       ...s,
       attempt: null,
       reports: [...s.reports, report].slice(-20),
+      review: addMistakes(s.review, report.items),
       plans: { ...s.plans, [plan.id]: plan },
       activePlanId: plan.id,
     };

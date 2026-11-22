@@ -74,6 +74,13 @@ export function Report({ id }) {
         </div>
       </section>
 
+      {report.correct < report.total && (
+        <section className="slab panel review-callout" aria-label="Daily review">
+          <p><strong>🔁 {report.total - report.correct} missed question{report.total - report.correct === 1 ? '' : 's'}</strong> went into your daily review, so you can practise them until they stick.</p>
+          <a className="btn ghost sm" href="#/revise">Fix my mistakes →</a>
+        </section>
+      )}
+
       <section className="grid-2">
         <div className="slab panel">
           <h2>By language</h2>

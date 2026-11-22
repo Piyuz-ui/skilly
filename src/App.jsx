@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Component, Suspense, lazy, useEffect } from 'react';
 import { useRoute, navigate } from './lib/hooks.js';
 import { trackPage } from './lib/analytics.js';
 import { Feedback, openFeedback } from './components/Feedback.jsx';
@@ -10,6 +10,7 @@ import { ConfirmProvider, useConfirm } from './components/Confirm.jsx';
 import { Home } from './components/Home.jsx';
 import { JellyLogo } from './components/JellyLogo.jsx';
 import { Avatar } from './components/Avatar.jsx';
+import { InstallLink, OfflineNotice } from './components/Install.jsx';
 import { useAccount, resumeIfSignedIn } from './lib/account.js';
 import { accountsEnabled } from './lib/firebase.js';
 
@@ -30,8 +31,24 @@ const pages = {
   account: () => import('./components/Account.jsx'),
   code: () => import('./components/Code.jsx'),
   review: withQuestions(() => import('./components/Review.jsx')),
+  revise: withQuestions(() => import('./components/Revise.jsx')),
 };
-const lazyPage = (load, name) => lazy(() => load().then((m) => ({ default: m[name] })));
+// After a new version is published, an open tab may ask for page files that
+// no longer exist: reload once to pick up the new version. If that already
+// happened (or the device is offline), PageError below shows a message.
+function reloadOnce() {
+  try {
+    if (navigator.onLine === false) return false;
+    const last = Number(sessionStorage.getItem('skilly:reloaded') || 0);
+    if (Date.now() - last < 10_000) return false;
+    sessionStorage.setItem('skilly:reloaded', String(Date.now()));
+  } catch { return false; }
+  location.reload();
+  return true;
+}
+const lazyPage = (load, name) => lazy(() => load()
+  .then((m) => ({ default: m[name] }))
+  .catch((e) => { if (reloadOnce()) return new Promise(() => {}); throw e; }));
 const Survey = lazyPage(pages.survey, 'Survey');
 const Setup = lazyPage(pages.survey, 'Setup');
 const Test = lazyPage(pages.test, 'Test');
@@ -44,6 +61,7 @@ const Account = lazyPage(pages.account, 'Account');
 const CodeIndex = lazyPage(pages.code, 'CodeIndex');
 const CodeProblem = lazyPage(pages.code, 'CodeProblem');
 const Review = lazyPage(pages.review, 'Review');
+const Revise = lazyPage(pages.revise, 'Revise');
 
 // Once the home page is up and the browser is idle, fetch the common pages
 // in the background so later clicks open instantly. Skipped on Data Saver.
@@ -52,8 +70,28 @@ function prefetchPages() {
   // Wait a moment so the home page's own downloads (like the 3D scene) go first.
   setTimeout(() => {
     const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300));
-    idle(() => ['survey', 'paths', 'plan', 'beginner', 'code', 'report', 'test'].forEach((k) => pages[k]().catch(() => {})), { timeout: 4000 });
+    idle(() => ['survey', 'paths', 'plan', 'beginner', 'code', 'report', 'test', 'revise'].forEach((k) => pages[k]().catch(() => {})), { timeout: 4000 });
   }, 2500);
+}
+
+// If a page's code can't be downloaded (offline, or a new version replaced
+// it), show a way out instead of a blank screen.
+class PageError extends Component {
+  constructor(props) { super(props); this.state = { failed: false }; }
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidUpdate(prev) { if (prev.page !== this.props.page && this.state.failed) this.setState({ failed: false }); }
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <main id="main" tabIndex={-1} className="page wrap narrow">
+        <section className="slab panel">
+          <h1>This page didn’t load</h1>
+          <p>{navigator.onLine === false ? 'You’re offline, and this page isn’t saved on this device yet. Connect to the internet and try again.' : 'Something went wrong while loading it. Trying again usually fixes it.'}</p>
+          <div className="row"><button type="button" className="btn primary" onClick={() => location.reload()}>Try again</button><a className="btn ghost" href="#/">Home</a></div>
+        </section>
+      </main>
+    );
+  }
 }
 
 function PageLoading() {
@@ -125,6 +163,7 @@ function Routes() {
     case 'account': el = <Account />; break;
     case 'code': el = parts[1] ? <CodeProblem key={parts[1]} id={parts[1]} /> : <CodeIndex />; break;
     case 'review': el = <Review />; break;
+    case 'revise': el = <Revise />; break;
     case 'paths': el = parts[1] ? <PathViewer key={parts[1]} id={parts[1]} /> : <PathsIndex />; break;
     default: el = <Home />;
   }
@@ -134,7 +173,8 @@ function Routes() {
       <Aurora quiet={page === 'test'} />
       {page !== 'test' && <div className="spotlight" aria-hidden="true" />}
       <Header route={page} />
-      <Suspense fallback={<PageLoading />}>{el}</Suspense>
+      <PageError page={page}><Suspense fallback={<PageLoading />}>{el}</Suspense></PageError>
+      <OfflineNotice />
       <Footer quiet={page === 'test'} />
       <Feedback hidden={page === 'test'} />
     </div>
@@ -173,6 +213,7 @@ function Footer({ quiet }) {
               <li><button type="button" onClick={() => go('/beginner', 'beginner')}>Beginner: pick a language</button></li>
               <li><a href="#/plan">My roadmap</a></li>
               <li><a href="#/code">Coding practice</a></li>
+              <li><a href="#/revise">Fix my mistakes</a></li>
             </ul>
           </nav>
           <nav className="footer-col" aria-label="Career paths">
@@ -195,6 +236,7 @@ function Footer({ quiet }) {
             <ul role="list">
               <li><button type="button" onClick={openFeedback}>Send feedback</button></li>
               <li><a href="#/review">Teacher review</a></li>
+              <InstallLink />
             </ul>
           </div>
         </div>

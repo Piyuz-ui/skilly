@@ -3,8 +3,11 @@
 // (scripts/test-sync.mjs).
 //
 // What is synced: journey choice, survey, reports, roadmaps (with ticked tasks
-// and quiz results) and career-path progress. A test that is still running is
+// and quiz results), career-path progress, coding solves, active days and the
+// mistake-review pile. A test that is still running is
 // NOT synced: it stays on the device where it was started.
+
+import { mergeReview } from './revise.js';
 
 export const SYNC_SCHEMA = 1;
 const MAX_REPORTS = 20;
@@ -23,6 +26,7 @@ export function syncable(state) {
     paths: state.paths,
     code: state.code,
     activity: state.activity,
+    review: state.review,
   };
 }
 
@@ -117,6 +121,7 @@ export function mergeGenerous(local, remote) {
     activePlanId: local.activePlanId || remote.activePlanId || null,
     code: mergeCode(local.code, remote.code),
     activity: mergeDays(local.activity, remote.activity),
+    review: mergeReview(local.review, remote.review),
   };
   if (merged.activePlanId && !merged.plans[merged.activePlanId]) merged.activePlanId = null;
   return merged;
@@ -141,6 +146,7 @@ export function applyRemote(local, remote) {
     activePlanId: remote.activePlanId ?? local.activePlanId,
     code: mergeCode(local.code, remote.code),
     activity: mergeDays(local.activity, remote.activity),
+    review: mergeReview(local.review, remote.review),
   };
   if (merged.activePlanId && !merged.plans[merged.activePlanId]) merged.activePlanId = null;
   return merged;

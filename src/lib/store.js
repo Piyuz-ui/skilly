@@ -3,6 +3,7 @@
 // always sees the state produced by the first.
 import { useSyncExternalStore } from 'react';
 import { QUESTION_BY_ID, isQuestionId, onQuestionsLoaded } from '../data/questions/index.js';
+import { sanitizeReview, seedFromReports } from './revise.js';
 
 const KEY = 'skilly:v1';
 const VERSION = 1;
@@ -18,6 +19,7 @@ export const DEFAULT_STATE = Object.freeze({
   paths: {}, // pathId -> { done: {stepId: true}, ratings: {skillId: 0-5}, hours: number, weeks: {'stepId:weekIndex': true} }
   code: {}, // problemId -> { js?: solvedAtMs, py?: solvedAtMs }
   activity: [], // ['YYYY-MM-DD', …] days with real study activity (for streaks)
+  review: {}, // questionId -> { box, due, at, wrong }: missed questions for daily review (lib/revise.js)
 });
 
 const AUDIENCES = ['professional', 'student', 'beginner'];
@@ -76,6 +78,8 @@ export function sanitize(raw) {
   if (Array.isArray(raw.activity)) {
     s.activity = [...new Set(raw.activity.filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort().slice(-400);
   }
+  // Data saved before the review pile existed: start it from past mistakes.
+  s.review = raw.review && typeof raw.review === 'object' ? sanitizeReview(raw.review) : seedFromReports(s.reports);
   return s;
 }
 

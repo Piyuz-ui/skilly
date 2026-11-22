@@ -5,6 +5,7 @@ import { PROBLEMS } from '../data/codeProblems.js';
 import { PATHS } from '../data/paths.js';
 import { DAYS, buildIcs, googleCalendarUrl, downloadIcs } from '../lib/calendar.js';
 import { weekProgress } from '../lib/roadmap.js';
+import { reviewStats } from '../lib/revise.js';
 import { ShareButton } from './ShareCard.jsx';
 import { progressCard, hasProgress } from '../lib/shareCard.js';
 
@@ -16,6 +17,8 @@ const savePref = (v) => { try { localStorage.setItem(REMINDER_KEY, JSON.stringif
 function nextSteps(s) {
   const out = [];
   if (s.attempt?.status === 'active') out.push({ icon: '⏱', text: 'Finish your test in progress', href: '#/test' });
+  const { due } = reviewStats(s.review);
+  if (due) out.push({ icon: '🔁', text: `Fix my mistakes: ${due} question${due === 1 ? '' : 's'} to review today`, href: '#/revise' });
   const plan = s.activePlanId && s.plans[s.activePlanId];
   if (plan) {
     const i = plan.weeks.findIndex((w) => !weekProgress(plan, w).complete);

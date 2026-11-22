@@ -922,3 +922,28 @@ img, video, canvas { max-width: 100%; }
 .st-chip.stale { color: var(--warn); }
 .mc-chip { color: var(--lavender); }
 .uid { padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.3); font-family: var(--mono); overflow-wrap: anywhere; }
+
+/* ── Fix my mistakes (daily review) ───────────────────────────────────────── */
+.ok-text { color: var(--ok); }
+.bad-text { color: var(--bad); }
+.revise-page .page-head p { max-width: 62ch; }
+.revise-progress { display: flex; gap: 6px; margin: 0 0 14px; }
+.revise-progress span { flex: 1; height: 6px; border-radius: 99px; background: rgba(255,255,255,0.12); }
+.revise-progress .now { background: var(--lavender); }
+.revise-progress .ok { background: var(--ok); }
+.revise-progress .bad { background: var(--bad); }
+.revise-card fieldset:disabled .option { cursor: default; }
+.revise-card fieldset:disabled .option:hover { background: rgba(255,255,255,0.045); }
+.revise-card fieldset:disabled .option.right:hover { background: rgba(134, 217, 174, 0.12); }
+.revise-card fieldset:disabled .option.wrong:hover { background: rgba(243, 144, 159, 0.1); }
+.revise-feedback { border-top: 1px solid var(--line); padding-top: 14px; }
+.revise-feedback p { margin: 0 0 10px; }
+.revise-empty h2, .revise-done h2 { margin-top: 0; font-family: var(--display); }
+.review-callout { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.review-callout p { margin: 0; min-width: 0; }
+
+/* ── Install the app ──────────────────────────────────────────────────────── */
+.install-card { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-top: 14px; }
+.install-card p { margin: 0; min-width: 0; flex: 1 1 240px; }
+.install-card .row { gap: 8px; flex-wrap: nowrap; }
+.offline-pill { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; padding: 8px 14px; border-radius: 99px; background: #241729; border: 1px solid var(--line); color: var(--text); font-size: 0.85rem; box-shadow: 0 6px 24px rgba(0,0,0,0.4); }

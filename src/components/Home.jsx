@@ -8,6 +8,7 @@ import { PathCards } from './PathCards.jsx';
 import { PATHS } from '../data/paths.js';
 import { LANGUAGES } from '../data/questions/index.js';
 import { ThisWeek } from './ThisWeek.jsx';
+import { InstallCard } from './Install.jsx';
 import { PROBLEMS } from '../data/codeProblems.js';
 
 const CARDS = [
@@ -55,6 +56,7 @@ export function Home() {
       <section className="audience" aria-labelledby="who">
         <div className="wrap">
           <ThisWeek />
+          <InstallCard />
           <h2 id="who" className="question">Which best describes you?</h2>
           {attempt && (
             <p className="resume glass-chip">

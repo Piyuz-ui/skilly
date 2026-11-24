@@ -1,9 +1,22 @@
 # Skilly
 
-An animated skill-assessment and learning website built with React, Vite and Three.js.
-It asks one question first, “Which best describes you?”, and takes each learner
-from there to “Here’s what I can practise this week”. It also has **career paths**:
-step-by-step course roadmaps with a SkillBridge-style skill-gap planner.
+**Live site: [skilly-bq5c.netlify.app](https://skilly-bq5c.netlify.app)**
+
+Skilly is a free skill-assessment and learning website for students, professionals and
+complete beginners, built with React, Vite and Three.js. It asks one question first,
+“Which best describes you?”, and takes each learner from there to “Here’s what I can
+practise this week”.
+
+## What it does
+
+- **Timed tests**: 1,008 multiple-choice questions across 14 programming languages and 3 levels, with a report that explains every answer.
+- **A weekly plan**: weak topics from the report become a week-by-week roadmap with free courses from roadmap.sh.
+- **Career paths**: 23 step-by-step roadmaps across software, data and core engineering, each with study notes and a SkillBridge-style skill-gap planner.
+- **Coding practice**: 20 problems you solve in the browser in JavaScript or Python, checked against tests.
+- **Fix my mistakes**: missed questions come back in a short daily review (spaced repetition: 1, 3, 7, then 14 days).
+- **Accounts and sync**: sign in with email, Google or phone and your progress follows you to any device. Everything also works as a guest.
+- **Installable and offline**: install it from the browser as an app, and it keeps working without internet.
+- **Desktop app**: a native Mac app (Windows and Linux supported) built with Tauri and Rust. See [Desktop and mobile app](#desktop-and-mobile-app).
 
 | Path | Survey | Assessment | Destination |
 |---|---|---|---|
@@ -37,11 +50,31 @@ npm run preview
 
 The built site in `dist/` is static, so you can host it anywhere. It uses hash routing and relative asset paths.
 
-Run every check (all 672 questions, plus the 18 logic checks):
+Run every check (all 1,008 questions, the logic, sync, streak and review rules, the notes and the coding problems):
 
 ```bash
 npm test
 ```
+
+## Desktop and mobile app
+
+`src-tauri/` wraps the same site in a native app with [Tauri 2](https://tauri.app) (Rust).
+The app bundles every page, so it opens instantly and works offline; links to other
+websites open in the normal browser. Inside the app, sign-in is by email or phone.
+
+Needs [Rust](https://rustup.rs). Run it while developing:
+
+```bash
+npm run app
+```
+
+Build the Mac app (`src-tauri/target/release/bundle/macos/Skilly.app`, about 4 MB):
+
+```bash
+npx tauri build --bundles app
+```
+
+Android (`npm run app:android`) needs Android Studio, and iPhone (`npm run app:ios`) needs Xcode. Run `npx tauri android init` or `npx tauri ios init` once first.
 
 ## Deploying
 
@@ -83,7 +116,7 @@ npm run pdfs
 
 | What | Where |
 |---|---|
-| **Question bank** (672 questions: 14 languages × 3 levels × 16) | `src/data/questions/<language>.js`, combined in `src/data/questions/index.js` |
+| **Question bank** (1,008 questions: 14 languages × 3 levels × 24) | `src/data/questions/<language>.js`, loaded on demand by `src/data/questions/index.js` |
 | **Career paths** (23 roadmaps across software, data and core engineering) | `src/data/paths.js` (software & SkillBridge roles) and `src/data/paths-engineering.js` (DevOps, security, games, UI/UX, blockchain, data engineering, maths, ECE, EEE, Mechanical, Civil, Chemical, Robotics, Aerospace, Biotech) |
 | Beginner language picker and per-language starter profiles | `src/components/BeginnerPick.jsx`, `BEGINNER_PROFILES` in `src/lib/roadmap.js` |
 | SkillBridge gap engine (readiness, gap × weight ranking, week packing) | `src/lib/gap.js` |
